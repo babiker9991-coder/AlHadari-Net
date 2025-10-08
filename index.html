@@ -6,6 +6,44 @@
 <title>AlHadari Net - الحضري نت</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+    <!-- Firebase SDK -->
+<script type="module">
+  // استيراد وظائف Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+  // إعدادات مشروعك (استبدل القيم من Firebase Console)
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  // تهيئة Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // مثال على رفع بيانات
+  async function addUser(name, email) {
+    try {
+      await addDoc(collection(db, "users"), {
+        name: name,
+        email: email,
+        createdAt: new Date()
+      });
+      alert("تم حفظ البيانات بنجاح ✅");
+    } catch (e) {
+      console.error("حدث خطأ أثناء الحفظ: ", e);
+    }
+  }
+
+  // مثال على زر تسجيل (اربطه بزر في صفحتك)
+  window.addUser = addUser;
+</script>
+
 body {
     font-family: 'Cairo', sans-serif;
     margin: 0;
@@ -327,3 +365,4 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
 </script>
 </body>
 </html>
+
