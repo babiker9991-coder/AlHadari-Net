@@ -162,7 +162,6 @@ footer {
 </div>
 </header>
 
-<!-- الرئيسية -->
 <section id="home" class="active">
 <div class="hero">
 <h2>تعلم. تطور. تميز مع الحضري نت</h2>
@@ -191,7 +190,6 @@ footer {
 </div>
 </section>
 
-<!-- الدورات -->
 <section id="courses">
 <div class="page-header"><h2>جميع الدورات</h2></div>
 <div class="courses">
@@ -213,19 +211,17 @@ footer {
 </div>
 </section>
 
-<!-- من نحن -->
 <section id="about">
 <div class="page-header"><h2>من نحن</h2></div>
 <div class="about">
 <p>
-الحضري نت منصة تعليمية تتبع لشركة الحضري للبرمجيات تهدف إلى تمكين المتعلمين من اكتساب المهارات الحديثة
+الحضري نت منصة تعليمية سعودية تهدف إلى تمكين المتعلمين من اكتساب المهارات الحديثة
 في مجالات الإدارة، التقنية، وريادة الأعمال. نعمل على توفير بيئة تعليمية
 احترافية تجمع بين الجودة والتفاعل بأسلوب سهل وممتع.
 </p>
 </div>
 </section>
 
-<!-- تواصل معنا -->
 <section id="contact">
 <div class="page-header"><h2>تواصل معنا</h2></div>
 <div class="contact">
@@ -238,7 +234,6 @@ footer {
 </div>
 </section>
 
-<!-- تسجيل دخول -->
 <section id="login">
 <div class="page-header"><h2>تسجيل الدخول</h2></div>
 <form id="loginForm">
@@ -248,7 +243,6 @@ footer {
 </form>
 </section>
 
-<!-- إنشاء حساب -->
 <section id="register">
 <div class="page-header"><h2>إنشاء حساب جديد</h2></div>
 <form id="registerForm">
@@ -259,7 +253,6 @@ footer {
 </form>
 </section>
 
-<!-- لوحة تحكم -->
 <section id="dashboard">
 <div class="page-header"><h2>لوحة التحكم</h2></div>
 <div style="padding:20px;text-align:center;">
@@ -272,7 +265,21 @@ footer {
 <p>© 2025 الحضري نت | جميع الحقوق محفوظة</p>
 </footer>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 <script>
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 function showSection(sectionId) {
     document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
     document.getElementById(sectionId).classList.add('active');
@@ -280,20 +287,42 @@ function showSection(sectionId) {
 
 document.getElementById('contactForm').addEventListener('submit', function(e){
     e.preventDefault();
-    alert('تم إرسال رسالتك بنجاح! شكرًا لتواصلك مع الحضري نت 🌟');
+    alert('تم إرسال رسالتك بنجاح!');
     this.reset();
-});
-
-document.getElementById('loginForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    alert('تم تسجيل الدخول بنجاح! 🌟');
-    showSection('dashboard');
 });
 
 document.getElementById('registerForm').addEventListener('submit', function(e){
     e.preventDefault();
-    alert('تم إنشاء حسابك بنجاح! 🌟');
-    showSection('login');
+    let fullname = this.querySelector('input[type="text"]').value;
+    let email = this.querySelector('input[type="email"]').value;
+    let password = this.querySelector('input[type="password"]').value;
+    db.collection("users").add({
+        fullname: fullname,
+        email: email,
+        password: password,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        alert("تم إنشاء الحساب بنجاح!");
+        showSection('login');
+        this.reset();
+    }).catch((error) => {
+        console.error("خطأ في رفع البيانات:", error);
+    });
+});
+
+document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    let email = this.querySelector('input[type="email"]').value;
+    let password = this.querySelector('input[type="password"]').value;
+    db.collection("users").where("email", "==", email).where("password", "==", password).get()
+    .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+            alert("تم تسجيل الدخول بنجاح!");
+            showSection('dashboard');
+        } else {
+            alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+        }
+    });
 });
 </script>
 </body>
