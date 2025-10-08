@@ -3,41 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlHadari Net - Firebase Test</title>
+  <title>تسجيل مستخدم - AlHadari Net</title>
   <style>
     body {
       font-family: "Tahoma", sans-serif;
-      background-color: #f4f4f4;
+      background-color: #f2f4f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 320px;
       text-align: center;
-      margin-top: 100px;
+    }
+    h2 {
+      color: #003366;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
     }
     button {
+      width: 100%;
       background-color: #003366;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 10px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      margin-top: 10px;
     }
     button:hover {
       background-color: #00224d;
     }
+    #message {
+      margin-top: 10px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
-  <h1>مرحباً بك في موقع الحضري نت 🌐</h1>
-  <p>اضغط الزر لتجربة الاتصال بـ Firebase</p>
-  <button id="saveBtn">تجربة حفظ بيانات</button>
+  <div class="container">
+    <h2>نموذج تسجيل مستخدم</h2>
+    <input type="text" id="name" placeholder="الاسم الكامل" required><br>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" required><br>
+    <input type="password" id="password" placeholder="كلمة المرور" required><br>
+    <button id="registerBtn">تسجيل</button>
+    <div id="message"></div>
+  </div>
 
   <!-- 🔥 Firebase SDK -->
   <script type="module">
-    // استيراد مكتبات Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
 
-    // ✅ إعدادات مشروعك في Firebase
+    // ✅ إعدادات Firebase لمشروع AlHadari Net
     const firebaseConfig = {
       apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
       authDomain: "alhadari-net.firebaseapp.com",
@@ -51,22 +81,39 @@
     // 🚀 تهيئة Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const analytics = getAnalytics(app);
 
-    console.log("✅ تم الاتصال بنجاح بـ Firebase");
+    // 🎯 تسجيل مستخدم جديد في Firestore
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("message");
 
-    // 🧩 عند الضغط على الزر، نحفظ بيانات تجريبية
-    document.getElementById("saveBtn").addEventListener("click", async () => {
+      if (!name || !email || !password) {
+        msg.textContent = "⚠️ يرجى تعبئة جميع الحقول.";
+        msg.style.color = "red";
+        return;
+      }
+
       try {
         await addDoc(collection(db, "users"), {
-          name: "Ahmad AlHadari",
-          email: "ahmad@example.com",
+          name: name,
+          email: email,
+          password: password,
           createdAt: new Date()
         });
-        alert("✅ تم حفظ البيانات بنجاح في Firestore!");
+        msg.textContent = "✅ تم التسجيل بنجاح!";
+        msg.style.color = "green";
+
+        // مسح الحقول بعد الحفظ
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+
       } catch (error) {
         console.error("❌ خطأ أثناء الحفظ:", error);
-        alert("❌ حدث خطأ أثناء الاتصال بـ Firebase. تحقق من Console.");
+        msg.textContent = "❌ حدث خطأ أثناء الاتصال بـ Firebase.";
+        msg.style.color = "red";
       }
     });
   </script>
