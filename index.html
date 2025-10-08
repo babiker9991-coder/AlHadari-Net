@@ -1,116 +1,329 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AlHadari Net</title>
+<title>AlHadari Net - الحضري نت</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  .container {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    width: 350px;
-    text-align: center;
-  }
-  h2 {
-    color: #003366;
-    margin-bottom: 20px;
-  }
-  input {
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+body {
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+    background-color: #F5F5F5;
+    color: #222;
+}
+header {
+    background-color: #003366;
+    color: white;
+    padding: 10px 0;
+}
+.container {
     width: 90%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+nav a:hover,
+nav a.active {
+    color: #C9A227;
+}
+section {
+    display: none;
+    padding-bottom: 40px;
+}
+section.active {
+    display: block;
+}
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('https://source.unsplash.com/1600x600/?education,books') center/cover no-repeat;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+.hero h2 {
+    font-size: 36px;
+}
+.hero p {
+    font-size: 18px;
+}
+.hero .btn {
+    background-color: #C9A227;
+    color: #003366;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.hero .btn:hover {
+    background-color: #e0b94d;
+}
+.courses {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+.course {
+    background: white;
     border-radius: 8px;
-  }
-  button {
-    width: 95%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.course img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.course h3 {
+    color: #003366;
+    margin: 10px;
+}
+.course p {
+    margin: 0 10px 15px;
+}
+.about p {
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: justify;
+}
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 500px;
+    margin: auto;
+}
+input, textarea {
     padding: 10px;
-    background: #003366;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+button {
+    background-color: #003366;
     color: white;
     border: none;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
-  }
-  button:hover {
-    background: #00224d;
-  }
-  #message {
-    margin-top: 10px;
-    font-size: 14px;
-  }
+}
+button:hover {
+    background-color: #C9A227;
+    color: #003366;
+}
+footer {
+    background-color: #003366;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+.page-header {
+    background-color: #C9A227;
+    color: #003366;
+    text-align: center;
+    padding: 30px 0;
+    font-weight: 700;
+}
 </style>
 </head>
 <body>
+
+<header>
 <div class="container">
-  <h2>تسجيل مستخدم جديد</h2>
-  <input type="text" id="name" placeholder="الاسم الكامل">
-  <input type="email" id="email" placeholder="البريد الإلكتروني">
-  <input type="password" id="password" placeholder="كلمة المرور">
-  <button id="registerBtn">تسجيل</button>
-  <div id="message"></div>
+<h1 class="logo">الحضري نت</h1>
+<nav>
+<ul>
+<li><a href="#" class="active" onclick="showSection('home')">الرئيسية</a></li>
+<li><a href="#" onclick="showSection('courses')">الدورات</a></li>
+<li><a href="#" onclick="showSection('about')">من نحن</a></li>
+<li><a href="#" onclick="showSection('contact')">تواصل معنا</a></li>
+<li><a href="#" onclick="showSection('login')">تسجيل دخول</a></li>
+<li><a href="#" onclick="showSection('register')">إنشاء حساب</a></li>
+</ul>
+</nav>
 </div>
+</header>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js"></script>
+<section id="home" class="active">
+<div class="hero">
+<h2>تعلم. تطور. تميز مع الحضري نت</h2>
+<p>منصة تعليمية تقدم أفضل الدورات الإدارية والتقنية بإشراف نخبة من المدربين.</p>
+<a href="#" class="btn" onclick="showSection('courses')">تصفح الدورات</a>
+</div>
+<div class="featured">
+<h2>أهم الدورات</h2>
+<div class="courses">
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?business" alt="دورة القيادة">
+<h3>فن القيادة الإدارية</h3>
+<p>تعلّم كيف تصبح قائدًا ملهمًا وتدير فريقك باحترافية.</p>
+</div>
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?programming" alt="دورة البرمجة">
+<h3>أساسيات البرمجة الحديثة</h3>
+<p>ابدأ رحلتك في عالم البرمجة بخطوات سهلة ومنظمة.</p>
+</div>
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?finance" alt="دورة المالية">
+<h3>إدارة الموارد المالية</h3>
+<p>تعلم مبادئ الإدارة المالية لاتخاذ قرارات ناجحة.</p>
+</div>
+</div>
+</div>
+</section>
 
+<section id="courses">
+<div class="page-header"><h2>جميع الدورات</h2></div>
+<div class="courses">
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?marketing" alt="التسويق">
+<h3>أساسيات التسويق الرقمي</h3>
+<p>اكتشف عالم التسويق عبر الإنترنت واستراتيجياته الحديثة.</p>
+</div>
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?design" alt="تصميم">
+<h3>مقدمة في تصميم الجرافيك</h3>
+<p>أساسيات التصميم باستخدام أدوات احترافية مثل كانفا وفوتوشوب.</p>
+</div>
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?ai" alt="ذكاء اصطناعي">
+<h3>مقدمة في الذكاء الاصطناعي</h3>
+<p>تعرف على مفاهيم الذكاء الاصطناعي وتطبيقاته في الحياة اليومية.</p>
+</div>
+</div>
+</section>
+
+<section id="about">
+<div class="page-header"><h2>من نحن</h2></div>
+<div class="about">
+<p>
+الحضري نت منصة تعليمية سعودية تهدف إلى تمكين المتعلمين من اكتساب المهارات الحديثة
+في مجالات الإدارة، التقنية، وريادة الأعمال. نعمل على توفير بيئة تعليمية
+احترافية تجمع بين الجودة والتفاعل بأسلوب سهل وممتع.
+</p>
+</div>
+</section>
+
+<section id="contact">
+<div class="page-header"><h2>تواصل معنا</h2></div>
+<div class="contact">
+<form id="contactForm">
+<input type="text" placeholder="الاسم الكامل" required>
+<input type="email" placeholder="البريد الإلكتروني" required>
+<textarea placeholder="اكتب رسالتك هنا..." required></textarea>
+<button type="submit">إرسال</button>
+</form>
+</div>
+</section>
+
+<section id="login">
+<div class="page-header"><h2>تسجيل الدخول</h2></div>
+<form id="loginForm">
+<input type="email" placeholder="البريد الإلكتروني" required>
+<input type="password" placeholder="كلمة المرور" required>
+<button type="submit">دخول</button>
+</form>
+</section>
+
+<section id="register">
+<div class="page-header"><h2>إنشاء حساب جديد</h2></div>
+<form id="registerForm">
+<input type="text" placeholder="الاسم الكامل" required>
+<input type="email" placeholder="البريد الإلكتروني" required>
+<input type="password" placeholder="كلمة المرور" required>
+<button type="submit">إنشاء حساب</button>
+</form>
+</section>
+
+<section id="dashboard">
+<div class="page-header"><h2>لوحة التحكم</h2></div>
+<div style="padding:20px;text-align:center;">
+<h3>مرحبًا بك في لوحة تحكم الحضري نت</h3>
+<p>هنا يمكنك مشاهدة الدورات المسجلة، إدارة حسابك، والوصول إلى شهاداتك.</p>
+</div>
+</section>
+
+<footer>
+<p>© 2025 الحضري نت | جميع الحقوق محفوظة</p>
+</footer>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 <script>
-  // إعدادات Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-    authDomain: "alhadari-net.firebaseapp.com",
-    projectId: "alhadari-net",
-    storageBucket: "alhadari-net.appspot.com",
-    messagingSenderId: "465757130283",
-    appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
-    measurementId: "G-DK4L0CDHY4"
-  };
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-  // تهيئة Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+function showSection(sectionId) {
+    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+}
 
-  document.getElementById("registerBtn").addEventListener("click", async () => {
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const message = document.getElementById("message");
+document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    alert('تم إرسال رسالتك بنجاح!');
+    this.reset();
+});
 
-    if (!name || !email || !password) {
-      message.textContent = "⚠️ يرجى تعبئة جميع الحقول.";
-      message.style.color = "red";
-      return;
-    }
-
-    try {
-      await db.collection("users").add({
-        name: name,
+document.getElementById('registerForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    let fullname = this.querySelector('input[type="text"]').value;
+    let email = this.querySelector('input[type="email"]').value;
+    let password = this.querySelector('input[type="password"]').value;
+    db.collection("users").add({
+        fullname: fullname,
         email: email,
         password: password,
-        createdAt: new Date()
-      });
-      message.textContent = "✅ تم التسجيل بنجاح!";
-      message.style.color = "green";
-      document.getElementById("name").value = "";
-      document.getElementById("email").value = "";
-      document.getElementById("password").value = "";
-    } catch (error) {
-      console.error(error);
-      message.textContent = "❌ حدث خطأ أثناء الحفظ.";
-      message.style.color = "red";
-    }
-  });
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        alert("تم إنشاء الحساب بنجاح!");
+        showSection('login');
+        this.reset();
+    }).catch((error) => {
+        console.error("خطأ في رفع البيانات:", error);
+    });
+});
+
+document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    let email = this.querySelector('input[type="email"]').value;
+    let password = this.querySelector('input[type="password"]').value;
+    db.collection("users").where("email", "==", email).where("password", "==", password).get()
+    .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+            alert("تم تسجيل الدخول بنجاح!");
+            showSection('dashboard');
+        } else {
+            alert("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+        }
+    });
+});
 </script>
 </body>
 </html>
