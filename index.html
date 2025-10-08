@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحضري نت - منصة تعليمية</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+body {
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+    background-color: #F5F5F5;
+    color: #222;
+}
+/* Header */
+header {
+    background-color: #003366;
+    color: white;
+    padding: 10px 0;
+}
+.container {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+nav a:hover,
+nav a.active {
+    color: #C9A227;
+}
+/* Hero Section */
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('https://source.unsplash.com/1600x600/?education,books') center/cover no-repeat;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+.hero h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+.hero p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+.hero .btn {
+    background-color: #C9A227;
+    color: #003366;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 600;
+}
+.hero .btn:hover {
+    background-color: #e0b94d;
+}
+/* Sections */
+.featured, .courses, .about, .contact {
+    width: 90%;
+    margin: 40px auto;
+}
+.courses {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+.course {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+.course:hover {
+    transform: translateY(-5px);
+}
+.course img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.course h3 {
+    color: #003366;
+    margin: 10px;
+}
+.course p {
+    margin: 0 10px 15px;
+    color: #555;
+}
+/* About */
+.about p {
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: justify;
+}
+/* Contact Form */
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 500px;
+    margin: auto;
+}
+input, textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+button {
+    background-color: #003366;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+button:hover {
+    background-color: #C9A227;
+    color: #003366;
+}
+/* Footer */
+footer {
+    background-color: #003366;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+}
+.page-header {
+    background-color: #C9A227;
+    color: #003366;
+    text-align: center;
+    padding: 30px 0;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+<div class="container">
+<h1 class="logo">الحضري نت</h1>
+<nav>
+<ul>
+<li><a href="#" class="active" onclick="showSection('home')">الرئيسية</a></li>
+<li><a href="#" onclick="showSection('courses')">الدورات</a></li>
+<li><a href="#" onclick="showSection('about')">من نحن</a></li>
+<li><a href="#" onclick="showSection('contact')">تواصل معنا</a></li>
+</ul>
+</nav>
+</div>
+</header>
+
+<!-- Home Section -->
+<section id="home" class="hero">
+<div class="hero-content">
+<h2>تعلم. تطور. تميز مع الحضري نت</h2>
+<p>منصة تعليمية تقدم أفضل الدورات الإدارية والتقنية بإشراف نخبة من المدربين.</p>
+<a href="#" class="btn" onclick="showSection('courses')">تصفح الدورات</a>
+</div>
+</section>
+
+<!-- Courses Section -->
+<section id="courses" class="courses" style="display:none;">
+<div class="page-header"><h2>جميع الدورات</h2></div>
+<div class="courses">
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?marketing" alt="التسويق">
+<h3>أساسيات التسويق الرقمي</h3>
+<p>اكتشف عالم التسويق عبر الإنترنت واستراتيجياته الحديثة.</p>
+</div>
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?design" alt="تصميم">
+<h3>مقدمة في تصميم الجرافيك</h3>
+<p>أساسيات التصميم باستخدام أدوات احترافية مثل كانفا وفوتوشوب.</p>
+</div>
+<div class="course">
+<img src="https://source.unsplash.com/400x250/?ai" alt="ذكاء اصطناعي">
+<h3>مقدمة في الذكاء الاصطناعي</h3>
+<p>تعرف على مفاهيم الذكاء الاصطناعي وتطبيقاته في الحياة اليومية.</p>
+</div>
+</div>
+</section>
+
+<!-- About Section -->
+<section id="about" style="display:none;">
+<div class="page-header"><h2>من نحن</h2></div>
+<div class="about">
+<p>
+الحضري نت منصة تعليمية سعودية تهدف إلى تمكين المتعلمين من اكتساب المهارات الحديثة
+في مجالات الإدارة، التقنية، وريادة الأعمال. نعمل على توفير بيئة تعليمية
+احترافية تجمع بين الجودة والتفاعل بأسلوب سهل وممتع.
+</p>
+</div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" style="display:none;">
+<div class="page-header"><h2>تواصل معنا</h2></div>
+<div class="contact">
+<form id="contactForm">
+<input type="text" placeholder="الاسم الكامل" required>
+<input type="email" placeholder="البريد الإلكتروني" required>
+<textarea placeholder="اكتب رسالتك هنا..." required></textarea>
+<button type="submit">إرسال</button>
+</form>
+</div>
+</section>
+
+<!-- Footer -->
+<footer>
+<p>© 2025 الحضري نت | جميع الحقوق محفوظة</p>
+</footer>
+
+<script>
+function showSection(sectionId) {
+    document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('تم إرسال رسالتك بنجاح! شكرًا لتواصلك مع الحضري نت 🌟');
+    this.reset();
+});
+</script>
+
+</body>
+</html>
