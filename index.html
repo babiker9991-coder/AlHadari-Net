@@ -6,7 +6,7 @@
   <title>تسجيل مستخدم - AlHadari Net</title>
   <style>
     body {
-      font-family: "Tahoma", sans-serif;
+      font-family: Arial, sans-serif;
       background-color: #f2f4f7;
       display: flex;
       justify-content: center;
@@ -16,32 +16,26 @@
     .container {
       background-color: white;
       padding: 30px;
-      border-radius: 16px;
+      border-radius: 12px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 320px;
+      width: 300px;
       text-align: center;
-    }
-    h2 {
-      color: #003366;
-      margin-bottom: 20px;
     }
     input {
       width: 90%;
       padding: 10px;
       margin: 8px 0;
-      border: 1px solid #ccc;
       border-radius: 8px;
+      border: 1px solid #ccc;
     }
     button {
-      width: 100%;
       background-color: #003366;
       color: white;
-      border: none;
       padding: 10px;
+      border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
+      width: 95%;
     }
     button:hover {
       background-color: #00224d;
@@ -53,69 +47,65 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>نموذج تسجيل مستخدم</h2>
-    <input type="text" id="name" placeholder="الاسم الكامل" required><br>
-    <input type="email" id="email" placeholder="البريد الإلكتروني" required><br>
-    <input type="password" id="password" placeholder="كلمة المرور" required><br>
-    <button id="registerBtn">تسجيل</button>
-    <div id="message"></div>
-  </div>
+<div class="container">
+  <h2>تسجيل مستخدم جديد</h2>
+  <input type="text" id="name" placeholder="الاسم الكامل">
+  <input type="email" id="email" placeholder="البريد الإلكتروني">
+  <input type="password" id="password" placeholder="كلمة المرور">
+  <button id="registerBtn">تسجيل</button>
+  <div id="message"></div>
+</div>
 
-  <!-- 🔥 Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js"></script>
 
-    // ✅ إعدادات Firebase لمشروع AlHadari Net
-    const firebaseConfig = {
-      apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-      authDomain: "alhadari-net.firebaseapp.com",
-      projectId: "alhadari-net",
-      storageBucket: "alhadari-net.appspot.com",
-      messagingSenderId: "465757130283",
-      appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
-      measurementId: "G-DK4L0CDHY4"
-    };
+<script>
+  // إعدادات Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
+    authDomain: "alhadari-net.firebaseapp.com",
+    projectId: "alhadari-net",
+    storageBucket: "alhadari-net.appspot.com",
+    messagingSenderId: "465757130283",
+    appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
+    measurementId: "G-DK4L0CDHY4"
+  };
 
-    // 🚀 تهيئة Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  // تهيئة Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-    // 🎯 تسجيل مستخدم جديد في Firestore
-    document.getElementById("registerBtn").addEventListener("click", async () => {
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const msg = document.getElementById("message");
+  document.getElementById("registerBtn").addEventListener("click", async () => {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const message = document.getElementById("message");
 
-      if (!name || !email || !password) {
-        msg.textContent = "⚠️ يرجى تعبئة جميع الحقول.";
-        msg.style.color = "red";
-        return;
-      }
+    if (!name || !email || !password) {
+      message.textContent = "⚠️ يرجى تعبئة جميع الحقول.";
+      message.style.color = "red";
+      return;
+    }
 
-      try {
-        await addDoc(collection(db, "users"), {
-          name: name,
-          email: email,
-          password: password,
-          createdAt: new Date()
-        });
-        msg.textContent = "✅ تم التسجيل بنجاح!";
-        msg.style.color = "green";
-
-        // مسح الحقول بعد الحفظ
-        document.getElementById("name").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("password").value = "";
-
-      } catch (error) {
-        console.error("❌ خطأ أثناء الحفظ:", error);
-        msg.textContent = "❌ حدث خطأ أثناء الاتصال بـ Firebase.";
-        msg.style.color = "red";
-      }
-    });
-  </script>
+    try {
+      await db.collection("users").add({
+        name: name,
+        email: email,
+        password: password,
+        createdAt: new Date()
+      });
+      message.textContent = "✅ تم التسجيل بنجاح!";
+      message.style.color = "green";
+      document.getElementById("name").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("password").value = "";
+    } catch (error) {
+      console.error(error);
+      message.textContent = "❌ حدث خطأ أثناء الحفظ.";
+      message.style.color = "red";
+    }
+  });
+</script>
 </body>
 </html>
