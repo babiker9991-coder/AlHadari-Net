@@ -143,53 +143,7 @@ footer {
     padding: 30px 0;
     font-weight: 700;
 }<!
-    --><script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-    authDomain: "alhadari-net.firebaseapp.com",
-    projectId: "alhadari-net",
-    storageBucket: "alhadari-net.appspot.com",
-    messagingSenderId: "465757130283",
-    appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
-    measurementId: "G-DK4L0CDHY4"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // زر اختبار الحفظ
-  async function testSave() {
-    try {
-      await addDoc(collection(db, "test"), {
-        message: "تم الاتصال بنجاح!",
-        date: new Date().toISOString()
-      });
-      alert("✅ تم الاتصال وحفظ البيانات في Firestore!");
-    } catch (e) {
-      console.error("❌ خطأ أثناء الحفظ:", e);
-      alert("❌ خطأ: " + e.message);
-    }
-  }
-
-  // إنشاء زر في الصفحة
-  document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.createElement("button");
-    btn.textContent = "اختبار الاتصال بـ Firestore";
-    btn.onclick = testSave;
-    document.body.appendChild(btn);
-  });
-
-  // دالة الأقسام لتفادي الخطأ
-  window.showSection = function (id) {
-    console.log("تم الضغط على القسم:", id);
-  };
-</script>
-
-  });
-</script>
+    --><script type="module">>
 
 </style>
 </head>
@@ -375,21 +329,60 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
 });
    
 };
+<!-- كود الاتصال بـ Firebase Firestore -->
+<script type="module">
+  // استيراد مكتبات Firebase من الإصدار الرسمي
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-// Initialize Firebase
+  // إعدادات مشروعك من Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
+    authDomain: "alhadari-net.firebaseapp.com",
+    projectId: "alhadari-net",
+    storageBucket: "alhadari-net.appspot.com",
+    messagingSenderId: "465757130283",
+    appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
+    measurementId: "G-DK4L0CDHY4"
+  };
 
-  apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-  authDomain: "alhadari-net.firebaseapp.com",
-  projectId: "alhadari-net",
-  storageBucket: "alhadari-net.appspot.com",
-  messagingSenderId: "465757130283",
-  appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
-  measurementId: "G-DK4L0CDHY4"
-};
+  // تهيئة الاتصال بـ Firebase و Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // دالة اختبار الاتصال بقاعدة البيانات
+  async function testSave() {
+    try {
+      await addDoc(collection(db, "test"), {
+        message: "تم الاتصال بنجاح!",
+        date: new Date().toISOString()
+      });
+      alert("✅ تم الاتصال بنجاح وحفظ البيانات في Firestore!");
+    } catch (e) {
+      console.error("❌ خطأ أثناء الحفظ:", e);
+      alert("❌ حدث خطأ أثناء الاتصال: " + e.message);
+    }
+  }
+
+  // إنشاء زر للاختبار في الصفحة
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.createElement("button");
+    btn.textContent = "اختبار الاتصال بـ Firestore";
+    btn.style = "padding:10px 20px; margin:20px; font-size:16px;";
+    btn.onclick = testSave;
+    document.body.appendChild(btn);
+  });
+
+  // دالة لتفادي الخطأ في الأقسام
+  window.showSection = function (id) {
+    console.log("تم الضغط على القسم:", id);
+  };
+</script>
 
 </script>
 </body>
 </html>
+
 
 
 
