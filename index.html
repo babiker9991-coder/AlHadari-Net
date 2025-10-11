@@ -88,16 +88,20 @@ const adminPassword = "2211"; // مثال
 let isAdmin = false;
 
 // اطلب كلمة المرور عند تحميل الموقع لإظهار لوحة التحكم
-window.onload = function(){
+window.onload = function(){window.onload = function(){
   const pwd = prompt("ادخل كلمة مرور المشرف للوصول للوحة التحكم (اترك فارغ للزوار):");
-  if(pwd === 2211){
+  if(pwd ===2211){
     isAdmin = true;
-    document.getElementById("dashboard-link").style.display = "inline-block";
+    // إظهار رابط لوحة التحكم
+    const dashLink = document.getElementById("dashboard-link");
+    if(dashLink){ dashLink.style.display = "inline-block"; }
+    // عرض لوحة التحكم مباشرة بعد التأكد
     showSection('dashboard');
   } else {
     showSection('home'); // الزوار يشاهدون الأخبار فقط
   }
 }
+
 
 // التنقل بين الأقسام
 window.showSection = function(id){
@@ -215,3 +219,4 @@ async function loadComments(newsId){
 
 </body>
 </html>
+
