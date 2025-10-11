@@ -10,14 +10,11 @@ header { background: linear-gradient(90deg,#003366,#0055aa); color:white; paddin
 nav { background:#0055aa; padding:14px; text-align:center; }
 nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; font-size:16px; transition:0.3s; }
 nav a:hover { text-decoration:underline; color:#ffdd00; }
-
 section { display:none; margin:25px auto; max-width:1000px; background:white; border-radius:15px; padding:25px; box-shadow:0 4px 20px rgba(0,0,0,0.12);}
 section.active { display:block; }
-
 input, textarea { width:95%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:10px; font-size:16px; }
 button { background:#003366; color:white; border:none; padding:12px 20px; border-radius:10px; cursor:pointer; font-size:16px; margin-top:10px; transition:0.3s; }
 button:hover { background:#0055aa; }
-
 .news-item { border-bottom:1px solid #ddd; margin-bottom:20px; padding-bottom:15px; text-align:right; border-radius:12px; transition:0.3s; background:#fafafa; }
 .news-item:hover { box-shadow:0 6px 18px rgba(0,0,0,0.15); }
 .news-item h3 { color:#003366; font-size:22px; margin-bottom:8px; }
@@ -25,18 +22,13 @@ button:hover { background:#0055aa; }
 .news-item img { max-width:100%; border-radius:12px; margin-top:10px; }
 .like-btn { cursor:pointer; color:#888; font-size:18px; margin-right:10px; transition:0.3s; }
 .liked { color:red; font-weight:bold; }
-
 .comment { margin-top:8px; border-top:1px dashed #ccc; padding-top:8px; font-size:15px; color:#555; }
 .comment-section { margin-top:12px; }
-.comment-section input { width:35%; display:inline-block; }
-.comment-section input.name { width:20%; margin-left:5px; }
-.comment-section button { width:38%; display:inline-block; }
-
+.comment-section input { width:70%; display:inline-block; }
+.comment-section button { width:25%; display:inline-block; }
 .success { color:green; }
 .error { color:red; }
-
 #contact-us { margin-top:25px; padding:15px; background:#e6f0ff; border-radius:10px; }
-
 footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-size:15px; text-align:center; letter-spacing:0.5px; }
 </style>
 </head>
@@ -52,7 +44,6 @@ footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-siz
 <section id="home" class="active">
   <h2 style="color:#0055aa; margin-bottom:20px;">آخر الأخبار الرياضية</h2>
   <div id="news-list"></div>
-
   <div id="contact-us">
     <h3>📬 تواصل معنا</h3>
     <p>البريد الإلكتروني: <a href="mailto:babiker9991@gmail.com">babiker9991@gmail.com</a></p>
@@ -77,6 +68,7 @@ footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-siz
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
@@ -90,9 +82,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
 
 // ************ التحكم بالمشرف ************
-const adminPassword = "221133"; // كلمة مرور المشرف الجديدة
+const adminPassword = "221133";
 let isAdmin = false;
 
 window.onload = function(){
@@ -102,7 +96,7 @@ window.onload = function(){
     document.getElementById("dashboard-link").style.display = "inline-block";
     showSection('dashboard');
   } else {
-    showSection('home'); // الزوار يشاهدون الأخبار فقط
+    showSection('home'); 
   }
 }
 
@@ -140,6 +134,23 @@ window.addNews = async function(){
   }
 }
 
+// تسجيل دخول الزائر عبر Google
+async function loginUser(){
+  try{
+    await signInWithPopup(auth, provider);
+  }catch(e){ console.error(e); }
+}
+
+// مراقبة حالة تسجيل الدخول
+let currentUserEmail = "زائر";
+onAuthStateChanged(auth, (user)=>{
+  if(user){
+    currentUserEmail = user.email;
+  } else {
+    currentUserEmail = "زائر";
+  }
+});
+
 // تحميل الأخبار وعرض الإعجابات والتعليقات
 async function loadNews(){
   const newsDiv = document.getElementById("news-list");
@@ -147,10 +158,9 @@ async function loadNews(){
   try{
     const q = query(collection(db,"sportsNews"), orderBy("createdAt","desc"));
     const snapshot = await getDocs(q);
-    snapshot.forEach(async docSnap=>{
+    snapshot.forEach(docSnap=>{
       const data = docSnap.data();
       const newsId = docSnap.id;
-
       const newsItem = document.createElement("div");
       newsItem.className="news-item";
 
@@ -159,7 +169,6 @@ async function loadNews(){
                   ${data.image? `<img src="${data.image}" alt="صورة الخبر">` : ''}
                   <p><span class="like-btn ${data.likes>0?'liked':''}" onclick="likeNews('${newsId}',this)">❤️ ${data.likes}</span></p>
                   <div class="comment-section">
-                    <input type="text" class="name" placeholder="اسمك" id="comment-name-${newsId}">
                     <input type="text" placeholder="اكتب تعليقك هنا" id="comment-${newsId}">
                     <button onclick="addComment('${newsId}')">أرسل</button>
                     <div id="comments-${newsId}"></div>
@@ -167,7 +176,6 @@ async function loadNews(){
                   <small>📅 ${data.createdAt.toDate().toLocaleString()}</small>`;
       newsItem.innerHTML = html;
       newsDiv.appendChild(newsItem);
-
       loadComments(newsId);
     });
   }catch(e){
@@ -184,22 +192,19 @@ window.likeNews = async function(newsId, el){
     await updateDoc(newsRef, { likes: currentLikes + 1 });
     el.textContent = `❤️ ${currentLikes +1}`;
     el.classList.add("liked");
-  }catch(e){
-    console.error(e);
-  }
+  }catch(e){ console.error(e); }
 }
 
-// إضافة تعليق مع الاسم
+// إضافة تعليق تلقائي باسم البريد
 window.addComment = async function(newsId){
   const input = document.getElementById(`comment-${newsId}`);
-  const nameInput = document.getElementById(`comment-name-${newsId}`);
   const text = input.value.trim();
-  const name = nameInput.value.trim() || "زائر";
-
   if(!text) return;
   try{
     await addDoc(collection(db,"sportsNews",newsId,"comments"),{
-      name, comment:text, createdAt:new Date()
+      name: currentUserEmail,
+      comment:text,
+      createdAt:new Date()
     });
     input.value="";
     loadComments(newsId);
