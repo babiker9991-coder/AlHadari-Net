@@ -5,43 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AlHadari Net - الحضري نت</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-    <!-- Firebase SDK -->
-<script type="module">
-  // استيراد وظائف Firebase
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-
-  // إعدادات مشروعك (استبدل القيم من Firebase Console)
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  // تهيئة Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // مثال على رفع بيانات
-  async function addUser(name, email) {
-    try {
-      await addDoc(collection(db, "users"), {
-        name: name,
-        email: email,
-        createdAt: new Date()
-      });
-      alert("تم حفظ البيانات بنجاح ✅");
-    } catch (e) {
-      console.error("حدث خطأ أثناء الحفظ: ", e);
-    }
-  }
-
-  // مثال على زر تسجيل (اربطه بزر في صفحتك)
-  window.addUser = addUser;
 </script>
 
 body {
@@ -179,7 +142,50 @@ footer {
     text-align: center;
     padding: 30px 0;
     font-weight: 700;
-}
+}<!-- Firebase SDKs -->
+<script type="module">
+  // استيراد مكتبات Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+  // إعدادات مشروعك من Firebase Console
+  const firebaseConfig = {
+    apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
+    authDomain: "alhadari-net.firebaseapp.com",
+    projectId: "alhadari-net",
+    storageBucket: "alhadari-net.appspot.com",
+    messagingSenderId: "465757130283",
+    appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
+    measurementId: "G-DK4L0CDHY4"
+  };
+
+  // تهيئة Firebase و Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // اختبار الحفظ
+  async function testSave() {
+    try {
+      await addDoc(collection(db, "test"), {
+        message: "تم الاتصال بنجاح!",
+        date: new Date().toISOString()
+      });
+      alert("✅ تم الحفظ بنجاح في Cloud Firestore!");
+    } catch (e) {
+      console.error("❌ خطأ أثناء الحفظ:", e);
+      alert("❌ خطأ: " + e.message);
+    }
+  }
+
+  // إنشاء زر اختبار
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.createElement("button");
+    btn.textContent = "اختبار الاتصال بـ Firestore";
+    btn.onclick = testSave;
+    document.body.appendChild(btn);
+  });
+</script>
+
 </style>
 </head>
 <body>
@@ -362,28 +368,11 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
         }
     });
 });
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-  authDomain: "alhadari-net.firebaseapp.com",
-  projectId: "alhadari-net",
-  storageBucket: "alhadari-net.firebasestorage.app",
-  messagingSenderId: "465757130283",
-  appId: "1:465757130283:web:10128c19bef6171e5e246e",
-  measurementId: "G-XLQB1M9FHQ"
+   
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-    const firebaseConfig = {
+
   apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
   authDomain: "alhadari-net.firebaseapp.com",
   projectId: "alhadari-net",
@@ -396,5 +385,6 @@ const analytics = getAnalytics(app);
 </script>
 </body>
 </html>
+
 
 
