@@ -5,23 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>الحضري نت رياضة - منصة الأخبار الرياضية</title>
 <style>
-  /* أساسيات التصميم */
   body { font-family:'Segoe UI', Tahoma, sans-serif; margin:0; padding:0; background:#f0f2f5; }
   header { background: linear-gradient(90deg,#003366,#0055aa); color:white; padding:25px; font-size:30px; text-align:center; font-weight:bold; letter-spacing:1px; }
   nav { background:#0055aa; padding:14px; text-align:center; }
   nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; font-size:16px; transition:0.3s; }
   nav a:hover { text-decoration:underline; color:#ffdd00; }
 
-  /* الأقسام */
   section { display:none; margin:25px auto; max-width:1000px; background:white; border-radius:15px; padding:25px; box-shadow:0 4px 20px rgba(0,0,0,0.12);}
   section.active { display:block; }
 
-  /* لوحة التحكم */
   input, textarea { width:95%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:10px; font-size:16px; }
   button { background:#003366; color:white; border:none; padding:12px 20px; border-radius:10px; cursor:pointer; font-size:16px; margin-top:10px; transition:0.3s; }
   button:hover { background:#0055aa; }
 
-  /* الأخبار */
   .news-item { border-bottom:1px solid #ddd; margin-bottom:20px; padding-bottom:15px; text-align:right; border-radius:12px; transition:0.3s; background:#fafafa; }
   .news-item:hover { box-shadow:0 6px 18px rgba(0,0,0,0.15); }
   .news-item h3 { color:#003366; font-size:22px; margin-bottom:8px; }
@@ -29,8 +25,7 @@
   .news-item img { max-width:100%; border-radius:12px; margin-top:10px; }
   .like-btn { cursor:pointer; color:#888; font-size:18px; margin-right:10px; transition:0.3s; }
   .liked { color:red; font-weight:bold; }
-  
-  /* التعليقات */
+
   .comment { margin-top:8px; border-top:1px dashed #ccc; padding-top:8px; font-size:15px; color:#555; }
   .comment-section { margin-top:12px; }
   .comment-section input { width:80%; display:inline-block; }
@@ -39,7 +34,6 @@
   .success { color:green; }
   .error { color:red; }
 
-  /* الفوتر */
   footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-size:15px; text-align:center; letter-spacing:0.5px; }
 </style>
 </head>
@@ -49,10 +43,10 @@
 
 <nav>
   <a href="#" onclick="showSection('home')">الرئيسية</a>
-  <a href="#" onclick="showSection('dashboard')">لوحة التحكم</a>
+  <!-- رابط لوحة التحكم سيظهر فقط للمشرف -->
+  <a href="#" id="dashboard-link" onclick="showSection('dashboard')" style="display:none;">لوحة التحكم</a>
 </nav>
 
-<!-- الأقسام -->
 <section id="home" class="active">
   <h2 style="color:#0055aa; margin-bottom:20px;">آخر الأخبار الرياضية</h2>
   <div id="news-list"></div>
@@ -87,6 +81,23 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// ************ التحكم بالمشرف ************
+// ضع هنا كلمة مرور المشرف البسيطة (يمكنك تغييرها لاحقاً)
+const adminPassword = "2211"; // مثال
+let isAdmin = false;
+
+// اطلب كلمة المرور عند تحميل الموقع لإظهار لوحة التحكم
+window.onload = function(){
+  const pwd = prompt("ادخل كلمة مرور المشرف للوصول للوحة التحكم (اترك فارغ للزوار):");
+  if(pwd === 2211){
+    isAdmin = true;
+    document.getElementById("dashboard-link").style.display = "inline-block";
+    showSection('dashboard');
+  } else {
+    showSection('home'); // الزوار يشاهدون الأخبار فقط
+  }
+}
 
 // التنقل بين الأقسام
 window.showSection = function(id){
@@ -133,7 +144,6 @@ async function loadNews(){
       const data = docSnap.data();
       const newsId = docSnap.id;
 
-      // إنشاء عنصر الخبر
       const newsItem = document.createElement("div");
       newsItem.className="news-item";
 
@@ -150,7 +160,6 @@ async function loadNews(){
       newsItem.innerHTML = html;
       newsDiv.appendChild(newsItem);
 
-      // تحميل التعليقات
       loadComments(newsId);
     });
   }catch(e){
@@ -201,9 +210,6 @@ async function loadComments(newsId){
     });
   }catch(e){ console.error(e); }
 }
-
-// تحميل الأخبار عند فتح الموقع
-loadNews();
 
 </script>
 
