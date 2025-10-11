@@ -48,7 +48,6 @@ footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-siz
     <h3>📬 تواصل معنا</h3>
     <p>البريد الإلكتروني: <a href="mailto:babiker9991@gmail.com">babiker9991@gmail.com</a></p>
     <p>رقم الجوال: +249900599203</p>
-    <p>تابعنا على وسائل التواصل الاجتماعي</p>
   </div>
 </section>
 
@@ -56,7 +55,7 @@ footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-siz
   <h2 style="color:#0055aa; margin-bottom:15px;">لوحة التحكم - إضافة الأخبار</h2>
   <input type="text" id="newsTitle" placeholder="عنوان الخبر"><br>
   <textarea id="newsContent" rows="5" placeholder="محتوى الخبر"></textarea><br>
-  <input type="text" id="newsImage" placeholder="رابط الصورة (اختياري)"><br>
+  <input type="file" id="newsImageFile"><br>
   <button onclick="addNews()">إضافة الخبر</button>
   <p id="dashboardMsg"></p>
 </section>
@@ -68,6 +67,7 @@ footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-siz
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -82,6 +82,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
@@ -108,26 +109,41 @@ window.showSection = function(id){
   if(id==="home"){ loadNews(); }
 }
 
-// إضافة خبر جديد
+// إضافة خبر جديد مع رفع الصورة
 window.addNews = async function(){
   const title = document.getElementById("newsTitle").value;
   const content = document.getElementById("newsContent").value;
-  const image = document.getElementById("newsImage").value;
+  const fileInput = document.getElementById("newsImageFile");
+  const file = fileInput.files[0];
   const msg = document.getElementById("dashboardMsg");
 
   if(!title || !content){ msg.textContent="❌ يجب إدخال العنوان والمحتوى"; msg.className="error"; return; }
 
+  let imageUrl = "";
+  if(file){
+    const storageRef = ref(storage, 'news_images/' + Date.now() + "_" + file.name);
+    try{
+      await uploadBytes(storageRef, file);
+      imageUrl = await getDownloadURL(storageRef);
+    } catch(e){
+      console.error(e);
+      msg.textContent="❌ حدث خطأ أثناء رفع الصورة";
+      msg.className="error";
+      return;
+    }
+  }
+
   try{
     await addDoc(collection(db,"sportsNews"),{
-      title, content, image, likes:0, createdAt:new Date()
+      title, content, image: imageUrl, likes:0, createdAt:new Date()
     });
     msg.textContent="✅ تم إضافة الخبر بنجاح!";
     msg.className="success";
     document.getElementById("newsTitle").value="";
     document.getElementById("newsContent").value="";
-    document.getElementById("newsImage").value="";
+    fileInput.value="";
     loadNews();
-  }catch(e){
+  } catch(e){
     console.error(e);
     msg.textContent="❌ حدث خطأ أثناء إضافة الخبر";
     msg.className="error";
