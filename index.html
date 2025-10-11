@@ -86,10 +86,10 @@ const storage = getStorage(app);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
-// ************ التحكم بالمشرف ************
 const adminPassword = "221133";
 let isAdmin = false;
 
+// تحقق من كلمة المرور عند تحميل الموقع
 window.onload = function(){
   const pwd = prompt("ادخل كلمة مرور المشرف للوصول للوحة التحكم (اترك فارغ للزوار):");
   if(pwd === adminPassword){
@@ -111,6 +111,8 @@ window.showSection = function(id){
 
 // إضافة خبر جديد مع رفع الصورة
 window.addNews = async function(){
+  if(!isAdmin){ alert("❌ فقط المشرف يمكنه إضافة الأخبار"); return; }
+
   const title = document.getElementById("newsTitle").value;
   const content = document.getElementById("newsContent").value;
   const fileInput = document.getElementById("newsImageFile");
