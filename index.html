@@ -7,19 +7,20 @@
   <style>
     body {
       font-family: 'Tahoma', sans-serif;
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
       background-color: #f5f5f5;
       text-align: center;
     }
     header {
       background-color: #003366;
-      color: #fff;
+      color: white;
       padding: 20px;
       font-size: 28px;
     }
     nav {
       background-color: #004080;
-      padding: 10px;
+      padding: 12px;
     }
     nav a {
       color: white;
@@ -34,7 +35,7 @@
       display: none;
       margin: 40px auto;
       max-width: 500px;
-      background: #fff;
+      background: white;
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 20px;
@@ -69,6 +70,7 @@
       padding: 12px;
       font-size: 14px;
     }
+    ul { text-align: right; }
   </style>
 </head>
 <body>
@@ -96,12 +98,15 @@
     <li>دورة HTML و CSS</li>
     <li>دورة JavaScript</li>
     <li>دورة Firebase & Web</li>
+    <li>دورة Python</li>
+    <li>دورة Excel للمبتدئين</li>
   </ul>
 </section>
 
 <section id="about">
   <h2>عن الموقع</h2>
   <p>موقع الحضري نت يهدف لتقديم محتوى تعليمي عالي الجودة لجميع المستخدمين.</p>
+  <p>يمكنك التسجيل وبدء التعلم مباشرة ومتابعة الدورات المختلفة.</p>
 </section>
 
 <section id="register">
@@ -123,7 +128,7 @@
 
 <section id="dashboard">
   <h2>لوحة التحكم</h2>
-  <p>أهلاً بك! هنا يمكنك مشاهدة بياناتك.</p>
+  <p>أهلاً بك! هنا يمكنك مشاهدة بياناتك أو اختبار الاتصال بقاعدة البيانات.</p>
   <button onclick="testSave()">اختبار الاتصال بـ Firestore</button>
 </section>
 
@@ -131,7 +136,6 @@
   &copy; 2025 AlHadari Net | جميع الحقوق محفوظة
 </footer>
 
-<!-- Firebase JS -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
@@ -149,69 +153,64 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // ---- دوال التنقل بين الأقسام ----
-  window.showSection = function(id) {
+  // التنقل بين الأقسام
+  window.showSection = function(id){
     const sections = document.querySelectorAll("section");
     sections.forEach(sec => sec.classList.remove("active"));
     const active = document.getElementById(id);
     if(active) active.classList.add("active");
   }
 
-  // ---- تسجيل مستخدم جديد ----
-  window.registerUser = async function() {
+  // تسجيل مستخدم جديد
+  window.registerUser = async function(){
     const name = document.getElementById("regName").value;
     const email = document.getElementById("regEmail").value;
     const password = document.getElementById("regPass").value;
     const msg = document.getElementById("regMsg");
-
-    try {
-      await addDoc(collection(db, "users"), {
-        name, email, password, createdAt: new Date()
-      });
-      msg.textContent = "✅ تم التسجيل بنجاح!";
-      msg.className = "success";
-    } catch(e) {
+    try{
+      await addDoc(collection(db,"users"),{name,email,password,createdAt:new Date()});
+      msg.textContent="✅ تم التسجيل بنجاح!";
+      msg.className="success";
+    }catch(e){
       console.error(e);
-      msg.textContent = "❌ حدث خطأ أثناء التسجيل.";
-      msg.className = "error";
+      msg.textContent="❌ حدث خطأ أثناء التسجيل.";
+      msg.className="error";
     }
   }
 
-  // ---- تسجيل الدخول ----
-  window.loginUser = async function() {
+  // تسجيل الدخول
+  window.loginUser = async function(){
     const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPass").value;
     const msg = document.getElementById("loginMsg");
-
-    try {
-      const q = query(collection(db, "users"), where("email", "==", email), where("password", "==", password));
-      const snapshot = await getDocs(q);
-      if(snapshot.empty) {
-        msg.textContent = "❌ البريد أو كلمة المرور خاطئة.";
-        msg.className = "error";
-      } else {
-        msg.textContent = "✅ تم تسجيل الدخول بنجاح!";
-        msg.className = "success";
+    try{
+      const q=query(collection(db,"users"),where("email","==",email),where("password","==",password));
+      const snapshot=await getDocs(q);
+      if(snapshot.empty){
+        msg.textContent="❌ البريد أو كلمة المرور خاطئة.";
+        msg.className="error";
+      }else{
+        msg.textContent="✅ تم تسجيل الدخول!";
+        msg.className="success";
         showSection("dashboard");
       }
-    } catch(e) {
+    }catch(e){
       console.error(e);
-      msg.textContent = "❌ حدث خطأ أثناء الدخول.";
-      msg.className = "error";
+      msg.textContent="❌ حدث خطأ أثناء الدخول.";
+      msg.className="error";
     }
   }
 
-  // ---- زر اختبار الاتصال ----
-  window.testSave = async function() {
-    try {
-      await addDoc(collection(db, "test"), { message: "تم الاتصال بنجاح", date: new Date() });
+  // اختبار الاتصال بـ Firestore
+  window.testSave=async function(){
+    try{
+      await addDoc(collection(db,"test"),{message:"تم الاتصال بنجاح",date:new Date()});
       alert("✅ تم الاتصال وحفظ البيانات!");
-    } catch(e) {
+    }catch(e){
       console.error(e);
-      alert("❌ خطأ أثناء الاتصال: " + e.message);
+      alert("❌ خطأ أثناء الاتصال: "+e.message);
     }
   }
-
 </script>
 
 </body>
