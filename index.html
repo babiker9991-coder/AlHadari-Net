@@ -28,8 +28,9 @@ button:hover { background:#0055aa; }
 
 .comment { margin-top:8px; border-top:1px dashed #ccc; padding-top:8px; font-size:15px; color:#555; }
 .comment-section { margin-top:12px; }
-.comment-section input { width:75%; display:inline-block; }
-.comment-section button { width:22%; display:inline-block; }
+.comment-section input { width:35%; display:inline-block; }
+.comment-section input.name { width:20%; margin-left:5px; }
+.comment-section button { width:38%; display:inline-block; }
 
 .success { color:green; }
 .error { color:red; }
@@ -54,8 +55,8 @@ footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-siz
 
   <div id="contact-us">
     <h3>📬 تواصل معنا</h3>
-    <p>البريد الإلكتروني: info@alhadarisport.com</p>
-    <p>الهاتف: 0123456789</p>
+    <p>البريد الإلكتروني: <a href="mailto:babiker9991@gmail.com">babiker9991@gmail.com</a></p>
+    <p>رقم الجوال: +249900599203</p>
     <p>تابعنا على وسائل التواصل الاجتماعي</p>
   </div>
 </section>
@@ -91,7 +92,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // ************ التحكم بالمشرف ************
-const adminPassword = "123456"; // كلمة مرور المشرف
+const adminPassword = "221133"; // كلمة مرور المشرف الجديدة
 let isAdmin = false;
 
 window.onload = function(){
@@ -158,6 +159,7 @@ async function loadNews(){
                   ${data.image? `<img src="${data.image}" alt="صورة الخبر">` : ''}
                   <p><span class="like-btn ${data.likes>0?'liked':''}" onclick="likeNews('${newsId}',this)">❤️ ${data.likes}</span></p>
                   <div class="comment-section">
+                    <input type="text" class="name" placeholder="اسمك" id="comment-name-${newsId}">
                     <input type="text" placeholder="اكتب تعليقك هنا" id="comment-${newsId}">
                     <button onclick="addComment('${newsId}')">أرسل</button>
                     <div id="comments-${newsId}"></div>
@@ -187,14 +189,17 @@ window.likeNews = async function(newsId, el){
   }
 }
 
-// إضافة تعليق
+// إضافة تعليق مع الاسم
 window.addComment = async function(newsId){
   const input = document.getElementById(`comment-${newsId}`);
+  const nameInput = document.getElementById(`comment-name-${newsId}`);
   const text = input.value.trim();
+  const name = nameInput.value.trim() || "زائر";
+
   if(!text) return;
   try{
     await addDoc(collection(db,"sportsNews",newsId,"comments"),{
-      comment:text, createdAt:new Date()
+      name, comment:text, createdAt:new Date()
     });
     input.value="";
     loadComments(newsId);
@@ -211,7 +216,7 @@ async function loadComments(newsId){
       const data = docSnap.data();
       const p = document.createElement("p");
       p.className="comment";
-      p.textContent = `${data.comment} - ${data.createdAt.toDate().toLocaleString()}`;
+      p.textContent = `${data.name}: ${data.comment} - ${data.createdAt.toDate().toLocaleString()}`;
       commentsDiv.appendChild(p);
     });
   }catch(e){ console.error(e); }
