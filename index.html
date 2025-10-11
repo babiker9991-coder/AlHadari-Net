@@ -3,118 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlHadari Net - موقع الحضري نت</title>
+  <title>الحضري نت - تسجيل الدورات</title>
   <style>
     body {
-      font-family: "Cairo", sans-serif;
-      background-color: #f5f5f5;
+      font-family: 'Tahoma', sans-serif;
+      background-color: #f9f9f9;
       margin: 0;
       padding: 0;
       text-align: center;
     }
     header {
-      background-color: #222;
-      color: #fff;
-      padding: 15px;
-      font-size: 24px;
+      background-color: #003366;
+      color: white;
+      padding: 20px;
+      font-size: 28px;
     }
-    nav {
-      background-color: #444;
-      padding: 10px;
-    }
-    nav a {
-      color: #fff;
-      margin: 0 10px;
-      text-decoration: none;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    main {
+    section {
+      margin: 40px auto;
+      max-width: 400px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 20px;
     }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
     button {
-      background-color: #008CBA;
+      background-color: #003366;
       color: white;
       border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 6px;
+      padding: 12px 20px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s;
+      font-size: 16px;
     }
     button:hover {
-      background-color: #006f99;
+      background-color: #0055aa;
     }
-    footer {
-      margin-top: 40px;
-      background-color: #222;
-      color: #ccc;
-      padding: 10px;
-      font-size: 14px;
+    .success {
+      color: green;
+    }
+    .error {
+      color: red;
     }
   </style>
 </head>
 <body>
-  <header>🌐 AlHadari Net - الحضري نت</header>
-  <nav>
-    <a href="#" onclick="showSection('home')">الرئيسية</a>
-    <a href="#" onclick="showSection('courses')">الدورات</a>
-    <a href="#" onclick="showSection('about')">عن الموقع</a>
-  </nav>
 
-  <main>
-    <h2>مرحبًا بك في موقع الحضري نت للدورات التعليمية</h2>
-    <p>منصة تعليمية تقدم محتوى مميز لتطوير مهاراتك التقنية والإدارية.</p>
-    <button id="testBtn">اختبار الاتصال بقاعدة البيانات</button>
-  </main>
+  <header>AlHadari Net - الحضري نت</header>
 
-  <footer>
-    &copy; 2025 AlHadari Net | جميع الحقوق محفوظة
-  </footer>
+  <section>
+    <h2>تسجيل مستخدم جديد</h2>
+    <input type="text" id="name" placeholder="الاسم الكامل" required><br>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" required><br>
+    <input type="password" id="password" placeholder="كلمة المرور" required><br>
+    <button onclick="registerUser()">تسجيل</button>
+    <p id="msg"></p>
+  </section>
 
-  <!-- Firebase اتصال بقاعدة -->
   <script type="module">
-    // استيراد مكتبات Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+    // استيراد المكتبات من Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
-    // إعدادات مشروعك
+    // إعدادات Firebase الخاصة بك
     const firebaseConfig = {
       apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
       authDomain: "alhadari-net.firebaseapp.com",
       projectId: "alhadari-net",
-      storageBucket: "alhadari-net.appspot.com",
+      storageBucket: "alhadari-net.firebasestorage.app",
       messagingSenderId: "465757130283",
       appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
       measurementId: "G-DK4L0CDHY4"
     };
 
-    // تهيئة Firebase
+    // تهيئة الاتصال
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // دالة اختبار الاتصال
-    async function testConnection() {
+    // دالة التسجيل
+    window.registerUser = async function() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const msg = document.getElementById("msg");
+
       try {
-        await addDoc(collection(db, "test"), {
-          message: "تم الاتصال بنجاح!",
-          date: new Date().toISOString()
+        await addDoc(collection(db, "users"), {
+          name: name,
+          email: email,
+          password: password,
+          createdAt: new Date()
         });
-        alert("✅ تم الاتصال بنجاح وحفظ البيانات في Firestore!");
+        msg.textContent = "✅ تم التسجيل بنجاح!";
+        msg.className = "success";
       } catch (error) {
-        console.error("❌ خطأ أثناء الاتصال:", error);
-        alert("❌ خطأ: " + error.message);
+        console.error(error);
+        msg.textContent = "❌ حدث خطأ أثناء التسجيل.";
+        msg.className = "error";
       }
     }
-
-    // زر الاختبار
-    document.getElementById("testBtn").addEventListener("click", testConnection);
-
-    // لتفادي خطأ showSection
-    window.showSection = function (id) {
-      console.log("تم الضغط على القسم:", id);
-    };
   </script>
+
 </body>
 </html>
