@@ -3,142 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlHadari Net - الحضري نت</title>
+  <title>الحضري نت رياضة</title>
   <style>
-    body {
-      font-family: 'Tahoma', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      text-align: center;
-    }
-    header {
-      background-color: #003366;
-      color: white;
-      padding: 20px;
-      font-size: 28px;
-    }
-    nav {
-      background-color: #004080;
-      padding: 12px;
-    }
-    nav a {
-      color: white;
-      margin: 0 12px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    section {
-      display: none;
-      margin: 40px auto;
-      max-width: 500px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
-    section.active { display: block; }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    button {
-      background-color: #003366;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #0055aa;
-    }
-    .success { color: green; }
-    .error { color: red; }
-    footer {
-      margin-top: 40px;
-      background-color: #003366;
-      color: #ccc;
-      padding: 12px;
-      font-size: 14px;
-    }
-    ul { text-align: right; }
+    body { font-family:'Tahoma',sans-serif; margin:0; padding:0; background:#f5f5f5; }
+    header { background:#003366; color:white; padding:20px; font-size:28px; text-align:center; }
+    nav { background:#004080; padding:12px; text-align:center; }
+    nav a { color:white; margin:0 12px; text-decoration:none; font-weight:bold; }
+    nav a:hover { text-decoration:underline; }
+    section { display:none; margin:20px auto; max-width:800px; background:white; border-radius:12px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+    section.active { display:block; }
+    input, textarea { width:90%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:8px; }
+    button { background:#003366; color:white; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-size:16px; margin-top:10px; }
+    button:hover { background:#0055aa; }
+    .news-item { border-bottom:1px solid #ccc; margin-bottom:10px; padding-bottom:10px; text-align:right; }
+    .success { color:green; }
+    .error { color:red; }
+    footer { margin-top:40px; background:#003366; color:#ccc; padding:12px; font-size:14px; text-align:center;}
+    img { max-width:100%; border-radius:8px; margin-top:10px; }
   </style>
 </head>
 <body>
 
-<header>🌐 AlHadari Net - الحضري نت</header>
+<header>🏆 الحضري نت رياضة</header>
 
 <nav>
   <a href="#" onclick="showSection('home')">الرئيسية</a>
-  <a href="#" onclick="showSection('courses')">الدورات</a>
-  <a href="#" onclick="showSection('about')">عن الموقع</a>
-  <a href="#" onclick="showSection('register')">تسجيل</a>
-  <a href="#" onclick="showSection('login')">دخول</a>
+  <a href="#" onclick="showSection('news')">الأخبار</a>
+  <a href="#" onclick="showSection('matches')">المباريات</a>
   <a href="#" onclick="showSection('dashboard')">لوحة التحكم</a>
 </nav>
 
 <!-- الأقسام -->
 <section id="home" class="active">
-  <h2>مرحبًا بك في الحضري نت</h2>
-  <p>منصة تعليمية متكاملة لتعلم المهارات التقنية والإدارية.</p>
+  <h2>أهلاً بك في الحضري نت رياضة</h2>
+  <p>منصة لنشر آخر الأخبار الرياضية والتحليلات المباشرة.</p>
+  <div id="ads-home">
+    <!-- مكان إعلان Google AdSense -->
+    <p>🔹 إعلان AdSense هنا 🔹</p>
+  </div>
 </section>
 
-<section id="courses">
-  <h2>الدورات المتاحة</h2>
+<section id="news">
+  <h2>آخر الأخبار</h2>
+  <div id="news-list"></div>
+  <div id="ads-news">
+    <!-- مكان إعلان AdSense -->
+    <p>🔹 إعلان AdSense هنا 🔹</p>
+  </div>
+</section>
+
+<section id="matches">
+  <h2>جدول المباريات</h2>
+  <p>المباريات القادمة والنتائج الأخيرة.</p>
   <ul>
-    <li>دورة HTML و CSS</li>
-    <li>دورة JavaScript</li>
-    <li>دورة Firebase & Web</li>
-    <li>دورة Python</li>
-    <li>دورة Excel للمبتدئين</li>
+    <li>فريق أ vs فريق ب - 15/10/2025</li>
+    <li>فريق ج vs فريق د - 16/10/2025</li>
   </ul>
 </section>
 
-<section id="about">
-  <h2>عن الموقع</h2>
-  <p>موقع الحضري نت يهدف لتقديم محتوى تعليمي عالي الجودة لجميع المستخدمين.</p>
-  <p>يمكنك التسجيل وبدء التعلم مباشرة ومتابعة الدورات المختلفة.</p>
-</section>
-
-<section id="register">
-  <h2>تسجيل مستخدم جديد</h2>
-  <input type="text" id="regName" placeholder="الاسم الكامل"><br>
-  <input type="email" id="regEmail" placeholder="البريد الإلكتروني"><br>
-  <input type="password" id="regPass" placeholder="كلمة المرور"><br>
-  <button onclick="registerUser()">تسجيل</button>
-  <p id="regMsg"></p>
-</section>
-
-<section id="login">
-  <h2>تسجيل الدخول</h2>
-  <input type="email" id="loginEmail" placeholder="البريد الإلكتروني"><br>
-  <input type="password" id="loginPass" placeholder="كلمة المرور"><br>
-  <button onclick="loginUser()">دخول</button>
-  <p id="loginMsg"></p>
-</section>
-
 <section id="dashboard">
-  <h2>لوحة التحكم</h2>
-  <p>أهلاً بك! هنا يمكنك مشاهدة بياناتك أو اختبار الاتصال بقاعدة البيانات.</p>
-  <button onclick="testSave()">اختبار الاتصال بـ Firestore</button>
+  <h2>لوحة التحكم - إضافة الأخبار</h2>
+  <input type="text" id="newsTitle" placeholder="عنوان الخبر"><br>
+  <textarea id="newsContent" rows="4" placeholder="محتوى الخبر"></textarea><br>
+  <input type="text" id="newsImage" placeholder="رابط الصورة (اختياري)"><br>
+  <button onclick="addNews()">إضافة الخبر</button>
+  <p id="dashboardMsg"></p>
 </section>
 
 <footer>
-  &copy; 2025 AlHadari Net | جميع الحقوق محفوظة
+  &copy; 2025 الحضري نت رياضة | جميع الحقوق محفوظة
 </footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
@@ -159,58 +97,65 @@
     sections.forEach(sec => sec.classList.remove("active"));
     const active = document.getElementById(id);
     if(active) active.classList.add("active");
+    if(id==="news"){ loadNews(); }
   }
 
-  // تسجيل مستخدم جديد
-  window.registerUser = async function(){
-    const name = document.getElementById("regName").value;
-    const email = document.getElementById("regEmail").value;
-    const password = document.getElementById("regPass").value;
-    const msg = document.getElementById("regMsg");
+  // إضافة خبر جديد
+  window.addNews = async function(){
+    const title = document.getElementById("newsTitle").value;
+    const content = document.getElementById("newsContent").value;
+    const image = document.getElementById("newsImage").value;
+    const msg = document.getElementById("dashboardMsg");
+
+    if(!title || !content){ msg.textContent="❌ يجب إدخال العنوان والمحتوى"; msg.className="error"; return; }
+
     try{
-      await addDoc(collection(db,"users"),{name,email,password,createdAt:new Date()});
-      msg.textContent="✅ تم التسجيل بنجاح!";
+      await addDoc(collection(db,"sportsNews"),{
+        title,
+        content,
+        image,
+        createdAt: new Date()
+      });
+      msg.textContent="✅ تم إضافة الخبر بنجاح!";
       msg.className="success";
+      document.getElementById("newsTitle").value="";
+      document.getElementById("newsContent").value="";
+      document.getElementById("newsImage").value="";
     }catch(e){
       console.error(e);
-      msg.textContent="❌ حدث خطأ أثناء التسجيل.";
+      msg.textContent="❌ حدث خطأ أثناء إضافة الخبر";
       msg.className="error";
     }
   }
 
-  // تسجيل الدخول
-  window.loginUser = async function(){
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPass").value;
-    const msg = document.getElementById("loginMsg");
+  // تحميل الأخبار من Firebase
+  async function loadNews(){
+    const newsDiv = document.getElementById("news-list");
+    newsDiv.innerHTML = "";
     try{
-      const q=query(collection(db,"users"),where("email","==",email),where("password","==",password));
-      const snapshot=await getDocs(q);
-      if(snapshot.empty){
-        msg.textContent="❌ البريد أو كلمة المرور خاطئة.";
-        msg.className="error";
-      }else{
-        msg.textContent="✅ تم تسجيل الدخول!";
-        msg.className="success";
-        showSection("dashboard");
-      }
+      const q = query(collection(db,"sportsNews"), orderBy("createdAt","desc"));
+      const snapshot = await getDocs(q);
+      snapshot.forEach(doc=>{
+        const data = doc.data();
+        const html = `
+          <div class="news-item">
+            <h3>${data.title}</h3>
+            <p>${data.content}</p>
+            ${data.image? `<img src="${data.image}" alt="صورة الخبر">` : ''}
+            <small>📅 ${data.createdAt.toDate().toLocaleString()}</small>
+          </div>
+        `;
+        newsDiv.innerHTML += html;
+      });
     }catch(e){
       console.error(e);
-      msg.textContent="❌ حدث خطأ أثناء الدخول.";
-      msg.className="error";
+      newsDiv.innerHTML = "<p>❌ حدث خطأ أثناء تحميل الأخبار</p>";
     }
   }
 
-  // اختبار الاتصال بـ Firestore
-  window.testSave=async function(){
-    try{
-      await addDoc(collection(db,"test"),{message:"تم الاتصال بنجاح",date:new Date()});
-      alert("✅ تم الاتصال وحفظ البيانات!");
-    }catch(e){
-      console.error(e);
-      alert("❌ خطأ أثناء الاتصال: "+e.message);
-    }
-  }
+  // تحميل الأخبار تلقائي عند الدخول إلى قسم الأخبار
+  if(document.getElementById("news").classList.contains("active")) loadNews();
+
 </script>
 
 </body>
