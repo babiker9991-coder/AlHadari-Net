@@ -3,38 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحضري نت رياضة - منصة الأخبار الرياضية</title>
+<title>الحضري نت رياضة</title>
 <style>
-  body { font-family:'Segoe UI', Tahoma, sans-serif; margin:0; padding:0; background:#f0f2f5; }
-  header { background: linear-gradient(90deg,#003366,#0055aa); color:white; padding:25px; font-size:30px; text-align:center; font-weight:bold; letter-spacing:1px; }
-  nav { background:#0055aa; padding:14px; text-align:center; }
-  nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; font-size:16px; transition:0.3s; }
-  nav a:hover { text-decoration:underline; color:#ffdd00; }
+body { font-family:'Segoe UI', Tahoma, sans-serif; margin:0; padding:0; background:#f0f2f5; }
+header { background: linear-gradient(90deg,#003366,#0055aa); color:white; padding:25px; font-size:30px; text-align:center; font-weight:bold; letter-spacing:1px; }
+nav { background:#0055aa; padding:14px; text-align:center; }
+nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; font-size:16px; transition:0.3s; }
+nav a:hover { text-decoration:underline; color:#ffdd00; }
 
-  section { display:none; margin:25px auto; max-width:1000px; background:white; border-radius:15px; padding:25px; box-shadow:0 4px 20px rgba(0,0,0,0.12);}
-  section.active { display:block; }
+section { display:none; margin:25px auto; max-width:1000px; background:white; border-radius:15px; padding:25px; box-shadow:0 4px 20px rgba(0,0,0,0.12);}
+section.active { display:block; }
 
-  input, textarea { width:95%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:10px; font-size:16px; }
-  button { background:#003366; color:white; border:none; padding:12px 20px; border-radius:10px; cursor:pointer; font-size:16px; margin-top:10px; transition:0.3s; }
-  button:hover { background:#0055aa; }
+input, textarea { width:95%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:10px; font-size:16px; }
+button { background:#003366; color:white; border:none; padding:12px 20px; border-radius:10px; cursor:pointer; font-size:16px; margin-top:10px; transition:0.3s; }
+button:hover { background:#0055aa; }
 
-  .news-item { border-bottom:1px solid #ddd; margin-bottom:20px; padding-bottom:15px; text-align:right; border-radius:12px; transition:0.3s; background:#fafafa; }
-  .news-item:hover { box-shadow:0 6px 18px rgba(0,0,0,0.15); }
-  .news-item h3 { color:#003366; font-size:22px; margin-bottom:8px; }
-  .news-item p { font-size:16px; line-height:1.5; color:#333; }
-  .news-item img { max-width:100%; border-radius:12px; margin-top:10px; }
-  .like-btn { cursor:pointer; color:#888; font-size:18px; margin-right:10px; transition:0.3s; }
-  .liked { color:red; font-weight:bold; }
+.news-item { border-bottom:1px solid #ddd; margin-bottom:20px; padding-bottom:15px; text-align:right; border-radius:12px; transition:0.3s; background:#fafafa; }
+.news-item:hover { box-shadow:0 6px 18px rgba(0,0,0,0.15); }
+.news-item h3 { color:#003366; font-size:22px; margin-bottom:8px; }
+.news-item p { font-size:16px; line-height:1.5; color:#333; }
+.news-item img { max-width:100%; border-radius:12px; margin-top:10px; }
+.like-btn { cursor:pointer; color:#888; font-size:18px; margin-right:10px; transition:0.3s; }
+.liked { color:red; font-weight:bold; }
 
-  .comment { margin-top:8px; border-top:1px dashed #ccc; padding-top:8px; font-size:15px; color:#555; }
-  .comment-section { margin-top:12px; }
-  .comment-section input { width:80%; display:inline-block; }
-  .comment-section button { width:18%; display:inline-block; }
+.comment { margin-top:8px; border-top:1px dashed #ccc; padding-top:8px; font-size:15px; color:#555; }
+.comment-section { margin-top:12px; }
+.comment-section input { width:75%; display:inline-block; }
+.comment-section button { width:22%; display:inline-block; }
 
-  .success { color:green; }
-  .error { color:red; }
+.success { color:green; }
+.error { color:red; }
 
-  footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-size:15px; text-align:center; letter-spacing:0.5px; }
+#contact-us { margin-top:25px; padding:15px; background:#e6f0ff; border-radius:10px; }
+
+footer { margin-top:40px; background:#003366; color:#ccc; padding:16px; font-size:15px; text-align:center; letter-spacing:0.5px; }
 </style>
 </head>
 <body>
@@ -43,13 +45,19 @@
 
 <nav>
   <a href="#" onclick="showSection('home')">الرئيسية</a>
-  <!-- رابط لوحة التحكم سيظهر فقط للمشرف -->
   <a href="#" id="dashboard-link" onclick="showSection('dashboard')" style="display:none;">لوحة التحكم</a>
 </nav>
 
 <section id="home" class="active">
   <h2 style="color:#0055aa; margin-bottom:20px;">آخر الأخبار الرياضية</h2>
   <div id="news-list"></div>
+
+  <div id="contact-us">
+    <h3>📬 تواصل معنا</h3>
+    <p>البريد الإلكتروني: info@alhadarisport.com</p>
+    <p>الهاتف: 0123456789</p>
+    <p>تابعنا على وسائل التواصل الاجتماعي</p>
+  </div>
 </section>
 
 <section id="dashboard">
@@ -83,25 +91,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // ************ التحكم بالمشرف ************
-// ضع هنا كلمة مرور المشرف البسيطة (يمكنك تغييرها لاحقاً)
-const adminPassword = "2211"; // مثال
+const adminPassword = "123456"; // كلمة مرور المشرف
 let isAdmin = false;
 
-// اطلب كلمة المرور عند تحميل الموقع لإظهار لوحة التحكم
-window.onload = function(){window.onload = function(){
+window.onload = function(){
   const pwd = prompt("ادخل كلمة مرور المشرف للوصول للوحة التحكم (اترك فارغ للزوار):");
-  if(pwd ===2211){
+  if(pwd === adminPassword){
     isAdmin = true;
-    // إظهار رابط لوحة التحكم
-    const dashLink = document.getElementById("dashboard-link");
-    if(dashLink){ dashLink.style.display = "inline-block"; }
-    // عرض لوحة التحكم مباشرة بعد التأكد
+    document.getElementById("dashboard-link").style.display = "inline-block";
     showSection('dashboard');
   } else {
     showSection('home'); // الزوار يشاهدون الأخبار فقط
   }
 }
-
 
 // التنقل بين الأقسام
 window.showSection = function(id){
@@ -219,4 +221,3 @@ async function loadComments(newsId){
 
 </body>
 </html>
-
