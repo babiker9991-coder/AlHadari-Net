@@ -135,23 +135,17 @@ window.addNews = async function(){
 }
 
 // تسجيل دخول الزائر عبر Google
+let currentUserEmail = "زائر";
 async function loginUser(){
-  try{
-    await signInWithPopup(auth, provider);
-  }catch(e){ console.error(e); }
+  try{ await signInWithPopup(auth, provider); }catch(e){ console.error(e); }
 }
 
 // مراقبة حالة تسجيل الدخول
-let currentUserEmail = "زائر";
 onAuthStateChanged(auth, (user)=>{
-  if(user){
-    currentUserEmail = user.email;
-  } else {
-    currentUserEmail = "زائر";
-  }
+  if(user){ currentUserEmail = user.email; } else { currentUserEmail = "زائر"; }
 });
 
-// تحميل الأخبار وعرض الإعجابات والتعليقات
+// تحميل الأخبار
 async function loadNews(){
   const newsDiv = document.getElementById("news-list");
   newsDiv.innerHTML = "";
@@ -195,7 +189,7 @@ window.likeNews = async function(newsId, el){
   }catch(e){ console.error(e); }
 }
 
-// إضافة تعليق تلقائي باسم البريد
+// إضافة تعليق باسم البريد بعد تسجيل الدخول
 window.addComment = async function(newsId){
   const input = document.getElementById(`comment-${newsId}`);
   const text = input.value.trim();
@@ -226,8 +220,6 @@ async function loadComments(newsId){
     });
   }catch(e){ console.error(e); }
 }
-
 </script>
-
 </body>
 </html>
