@@ -3,29 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>الحضري نت - تسجيل الدورات</title>
+  <title>AlHadari Net - الحضري نت</title>
   <style>
     body {
       font-family: 'Tahoma', sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
+      background-color: #f5f5f5;
       text-align: center;
     }
     header {
       background-color: #003366;
-      color: white;
+      color: #fff;
       padding: 20px;
       font-size: 28px;
     }
+    nav {
+      background-color: #004080;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      margin: 0 12px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
     section {
+      display: none;
       margin: 40px auto;
-      max-width: 400px;
-      background: white;
+      max-width: 500px;
+      background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 20px;
     }
+    section.active { display: block; }
     input {
       width: 90%;
       padding: 10px;
@@ -41,74 +55,164 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      margin-top: 10px;
     }
     button:hover {
       background-color: #0055aa;
     }
-    .success {
-      color: green;
-    }
-    .error {
-      color: red;
+    .success { color: green; }
+    .error { color: red; }
+    footer {
+      margin-top: 40px;
+      background-color: #003366;
+      color: #ccc;
+      padding: 12px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-  <header>AlHadari Net - الحضري نت</header>
+<header>🌐 AlHadari Net - الحضري نت</header>
 
-  <section>
-    <h2>تسجيل مستخدم جديد</h2>
-    <input type="text" id="name" placeholder="الاسم الكامل" required><br>
-    <input type="email" id="email" placeholder="البريد الإلكتروني" required><br>
-    <input type="password" id="password" placeholder="كلمة المرور" required><br>
-    <button onclick="registerUser()">تسجيل</button>
-    <p id="msg"></p>
-  </section>
+<nav>
+  <a href="#" onclick="showSection('home')">الرئيسية</a>
+  <a href="#" onclick="showSection('courses')">الدورات</a>
+  <a href="#" onclick="showSection('about')">عن الموقع</a>
+  <a href="#" onclick="showSection('register')">تسجيل</a>
+  <a href="#" onclick="showSection('login')">دخول</a>
+  <a href="#" onclick="showSection('dashboard')">لوحة التحكم</a>
+</nav>
 
-  <script type="module">
-    // استيراد المكتبات من Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+<!-- الأقسام -->
+<section id="home" class="active">
+  <h2>مرحبًا بك في الحضري نت</h2>
+  <p>منصة تعليمية متكاملة لتعلم المهارات التقنية والإدارية.</p>
+</section>
 
-    // إعدادات Firebase الخاصة بك
-    const firebaseConfig = {
-      apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-      authDomain: "alhadari-net.firebaseapp.com",
-      projectId: "alhadari-net",
-      storageBucket: "alhadari-net.firebasestorage.app",
-      messagingSenderId: "465757130283",
-      appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
-      measurementId: "G-DK4L0CDHY4"
-    };
+<section id="courses">
+  <h2>الدورات المتاحة</h2>
+  <ul>
+    <li>دورة HTML و CSS</li>
+    <li>دورة JavaScript</li>
+    <li>دورة Firebase & Web</li>
+  </ul>
+</section>
 
-    // تهيئة الاتصال
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+<section id="about">
+  <h2>عن الموقع</h2>
+  <p>موقع الحضري نت يهدف لتقديم محتوى تعليمي عالي الجودة لجميع المستخدمين.</p>
+</section>
 
-    // دالة التسجيل
-    window.registerUser = async function() {
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const msg = document.getElementById("msg");
+<section id="register">
+  <h2>تسجيل مستخدم جديد</h2>
+  <input type="text" id="regName" placeholder="الاسم الكامل"><br>
+  <input type="email" id="regEmail" placeholder="البريد الإلكتروني"><br>
+  <input type="password" id="regPass" placeholder="كلمة المرور"><br>
+  <button onclick="registerUser()">تسجيل</button>
+  <p id="regMsg"></p>
+</section>
 
-      try {
-        await addDoc(collection(db, "users"), {
-          name: name,
-          email: email,
-          password: password,
-          createdAt: new Date()
-        });
-        msg.textContent = "✅ تم التسجيل بنجاح!";
-        msg.className = "success";
-      } catch (error) {
-        console.error(error);
-        msg.textContent = "❌ حدث خطأ أثناء التسجيل.";
-        msg.className = "error";
-      }
+<section id="login">
+  <h2>تسجيل الدخول</h2>
+  <input type="email" id="loginEmail" placeholder="البريد الإلكتروني"><br>
+  <input type="password" id="loginPass" placeholder="كلمة المرور"><br>
+  <button onclick="loginUser()">دخول</button>
+  <p id="loginMsg"></p>
+</section>
+
+<section id="dashboard">
+  <h2>لوحة التحكم</h2>
+  <p>أهلاً بك! هنا يمكنك مشاهدة بياناتك.</p>
+  <button onclick="testSave()">اختبار الاتصال بـ Firestore</button>
+</section>
+
+<footer>
+  &copy; 2025 AlHadari Net | جميع الحقوق محفوظة
+</footer>
+
+<!-- Firebase JS -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
+    authDomain: "alhadari-net.firebaseapp.com",
+    projectId: "alhadari-net",
+    storageBucket: "alhadari-net.firebasestorage.app",
+    messagingSenderId: "465757130283",
+    appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
+    measurementId: "G-DK4L0CDHY4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ---- دوال التنقل بين الأقسام ----
+  window.showSection = function(id) {
+    const sections = document.querySelectorAll("section");
+    sections.forEach(sec => sec.classList.remove("active"));
+    const active = document.getElementById(id);
+    if(active) active.classList.add("active");
+  }
+
+  // ---- تسجيل مستخدم جديد ----
+  window.registerUser = async function() {
+    const name = document.getElementById("regName").value;
+    const email = document.getElementById("regEmail").value;
+    const password = document.getElementById("regPass").value;
+    const msg = document.getElementById("regMsg");
+
+    try {
+      await addDoc(collection(db, "users"), {
+        name, email, password, createdAt: new Date()
+      });
+      msg.textContent = "✅ تم التسجيل بنجاح!";
+      msg.className = "success";
+    } catch(e) {
+      console.error(e);
+      msg.textContent = "❌ حدث خطأ أثناء التسجيل.";
+      msg.className = "error";
     }
-  </script>
+  }
+
+  // ---- تسجيل الدخول ----
+  window.loginUser = async function() {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPass").value;
+    const msg = document.getElementById("loginMsg");
+
+    try {
+      const q = query(collection(db, "users"), where("email", "==", email), where("password", "==", password));
+      const snapshot = await getDocs(q);
+      if(snapshot.empty) {
+        msg.textContent = "❌ البريد أو كلمة المرور خاطئة.";
+        msg.className = "error";
+      } else {
+        msg.textContent = "✅ تم تسجيل الدخول بنجاح!";
+        msg.className = "success";
+        showSection("dashboard");
+      }
+    } catch(e) {
+      console.error(e);
+      msg.textContent = "❌ حدث خطأ أثناء الدخول.";
+      msg.className = "error";
+    }
+  }
+
+  // ---- زر اختبار الاتصال ----
+  window.testSave = async function() {
+    try {
+      await addDoc(collection(db, "test"), { message: "تم الاتصال بنجاح", date: new Date() });
+      alert("✅ تم الاتصال وحفظ البيانات!");
+    } catch(e) {
+      console.error(e);
+      alert("❌ خطأ أثناء الاتصال: " + e.message);
+    }
+  }
+
+</script>
 
 </body>
 </html>
