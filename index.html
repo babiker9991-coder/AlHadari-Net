@@ -67,6 +67,7 @@ button:hover{background:#6a1b9a}
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics-compat.js"></script>
 
 <script>
 // إعداد Firebase
@@ -74,14 +75,17 @@ const firebaseConfig = {
   apiKey: "ضع_apiKey_هنا",
   authDomain: "ضع_authDomain_هنا",
   databaseURL: "https://alhadari-net-default-rtdb.firebaseio.com",
-  projectId: "ضع_projectId_هنا",
-  storageBucket: "ضع_projectId_هنا.appspot.com",
-  messagingSenderId: "ضع_messagingSenderId_هنا",
-  appId: "ضع_appId_هنا"
+  projectId: "alhadari-net",
+  storageBucket: "alhadari-net.appspot.com",
+  messagingSenderId: "465757130283",
+  appId: "1:465757130283:web:10128c19bef6171e5e246e",
+  measurementId: "G-XLQB1M9FHQ"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const storage = firebase.storage();
+const analytics = firebase.analytics();
 
 // كلمة مرور المشرف
 const adminPass = "221133";
@@ -109,7 +113,6 @@ function addPost(){
   if(file){
     const storageRef = storage.ref('posts/'+Date.now()+'_'+file.name);
     storageRef.put(file).then(snapshot=>{
-      console.log("تم رفع الصورة إلى Storage");
       snapshot.ref.getDownloadURL().then(url=>{
         db.ref(category).push({title,content,image:url,createdAt:Date.now(),likes:0})
         .then(()=>status.textContent="✅ تم نشر الخبر مع الصورة")
