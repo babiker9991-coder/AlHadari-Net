@@ -7,6 +7,9 @@
 <style>
 body{font-family:"Cairo",sans-serif;background:#f2f5f8;margin:0;padding:0}
 header{background:#6a1b9a;color:#fff;padding:20px;text-align:center;font-size:28px;font-weight:bold}
+nav{background:#4a148c;color:#fff;padding:10px;text-align:center}
+nav a{color:#fff;margin:0 10px;text-decoration:none;font-weight:bold}
+nav a:hover{text-decoration:underline}
 .container{max-width:900px;margin:20px auto;padding:15px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
 input,textarea,button{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;font-size:14px}
 button{background:#6a1b9a;color:#fff;border:none;cursor:pointer;font-weight:bold}
@@ -14,21 +17,66 @@ button:hover{background:#4a148c}
 .post{border-bottom:1px solid #ddd;padding:15px 0}
 .comment{background:#f0f0f0;margin:6px 0;padding:8px;border-radius:5px;font-size:14px}
 .comments-box{margin-top:10px}
+#chatBox{position:fixed;bottom:0;right:20px;width:300px;background:#fff;border:1px solid #ccc;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.2);display:none}
+#chatHeader{background:#6a1b9a;color:#fff;padding:10px;border-top-left-radius:10px;border-top-right-radius:10px;text-align:center;cursor:pointer}
+#chatMessages{height:200px;overflow-y:auto;padding:10px;border-top:1px solid #ddd;border-bottom:1px solid #ddd}
+#chatInput{display:flex}
+#chatInput input{flex:1;border:none;border-top-left-radius:0;border-bottom-left-radius:0}
+#chatInput button{border-radius:0;border-top-left-radius:0;border-bottom-left-radius:0}
+.admin-panel{display:none;background:#eef3ff;padding:10px;border-radius:10px;margin-bottom:20px}
+#status{margin-top:8px;font-weight:bold}
 </style>
 </head>
 <body>
 
 <header>منتدى الحضري الثقافي</header>
+<nav>
+  <a href="#" onclick="showSection('news')">أخبار ثقافية</a>
+  <a href="#" onclick="showSection('articles')">مقالات</a>
+  <a href="#" onclick="showSection('discussions')">نقاشات</a>
+  <a href="#" onclick="toggleChat()">💬 دردشة</a>
+</nav>
 
 <div class="container">
-  <h3>أضف مشاركة جديدة</h3>
-  <input type="text" id="postTitle" placeholder="عنوان المشاركة">
-  <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
-  <button onclick="addPost()">نشر المشاركة</button>
-  <p id="status"></p>
-  <hr>
-  <h3>آخر المشاركات</h3>
-  <div id="postsList">جارٍ تحميل المشاركات...</div>
+
+  <!-- لوحة التحكم -->
+  <div class="admin-panel" id="adminPanel">
+    <h3>لوحة تحكم المشرف</h3>
+    <input type="text" id="postTitle" placeholder="عنوان المشاركة">
+    <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
+    <select id="postCategory">
+      <option value="news">أخبار ثقافية</option>
+      <option value="articles">مقالات</option>
+      <option value="discussions">نقاشات</option>
+    </select>
+    <button onclick="addPost()">نشر المشاركة</button>
+    <p id="status"></p>
+  </div>
+
+  <!-- أقسام المنتدى -->
+  <div id="news" class="section">
+    <h3>أخبار ثقافية</h3>
+    <div id="newsList">جارٍ تحميل المشاركات...</div>
+  </div>
+  <div id="articles" class="section" style="display:none">
+    <h3>مقالات</h3>
+    <div id="articlesList">جارٍ تحميل المقالات...</div>
+  </div>
+  <div id="discussions" class="section" style="display:none">
+    <h3>نقاشات</h3>
+    <div id="discussionsList">جارٍ تحميل النقاشات...</div>
+  </div>
+
+</div>
+
+<!-- دردشة -->
+<div id="chatBox">
+  <div id="chatHeader" onclick="toggleChat()">الدردشة</div>
+  <div id="chatMessages"></div>
+  <div id="chatInput">
+    <input type="text" id="chatText" placeholder="اكتب رسالة...">
+    <button onclick="sendMessage()">إرسال</button>
+  </div>
 </div>
 
 <!-- Firebase -->
@@ -51,69 +99,109 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// إدارة لوحة التحكم
+const adminPass = "221133";
+let isAdmin=false;
+window.addEventListener('load',()=>{
+  const pass=prompt("أدخل كلمة مرور المشرف:");
+  if(pass===adminPass){
+    isAdmin=true;
+    document.getElementById('adminPanel').style.display='block';
+  }
+  loadPosts();
+});
+
+// إضافة مشاركة
 function addPost(){
-  const title = document.getElementById('postTitle').value.trim();
-  const content = document.getElementById('postContent').value.trim();
-  const status = document.getElementById('status');
-  status.textContent = '';
-  if(!title || !content){ status.textContent="الرجاء تعبئة العنوان والمحتوى"; return; }
-  const postRef = db.ref('posts').push();
-  postRef.set({
-    title,
-    content,
-    createdAt: Date.now()
-  });
+  const title=document.getElementById('postTitle').value.trim();
+  const content=document.getElementById('postContent').value.trim();
+  const category=document.getElementById('postCategory').value;
+  const status=document.getElementById('status');
+  status.textContent='';
+  if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى";return;}
+  db.ref(category).push({title,content,createdAt:Date.now()});
   document.getElementById('postTitle').value='';
   document.getElementById('postContent').value='';
-  status.textContent='✅ تم نشر المشاركة';
+  status.textContent="✅ تم نشر المشاركة";
 }
 
+// تحميل المشاركات لكل قسم
 function loadPosts(){
-  const postsList = document.getElementById('postsList');
-  db.ref('posts').orderByChild('createdAt').on('value', snapshot=>{
-    postsList.innerHTML='';
-    const data = snapshot.val();
-    if(!data){ postsList.innerHTML='<p>لا توجد مشاركات بعد.</p>'; return; }
-    const entries = Object.keys(data).map(k=>({id:k,v:data[k]})).sort((a,b)=>b.v.createdAt - a.v.createdAt);
-    entries.forEach(entry=>{
-      const p = entry.v;
-      const div = document.createElement('div');
-      div.className='post';
-      div.innerHTML=`<h4>${p.title}</h4>
-                     <p>${p.content}</p>
-                     <div class="comments-box" id="comments-${entry.id}">
-                       <input id="commentInput-${entry.id}" placeholder="أضف تعليقك...">
-                       <button onclick="addComment('${entry.id}')">إرسال</button>
-                       <div id="commentsList-${entry.id}"></div>
-                     </div>`;
-      postsList.appendChild(div);
+  ['news','articles','discussions'].forEach(section=>{
+    db.ref(section).orderByChild('createdAt').on('value',snapshot=>{
+      const listEl=document.getElementById(section+'List');
+      listEl.innerHTML='';
+      const data=snapshot.val();
+      if(!data){listEl.innerHTML='<p>لا توجد مشاركات بعد.</p>'; return;}
+      Object.keys(data).sort((a,b)=>data[b].createdAt-data[a].createdAt).forEach(id=>{
+        const p=data[id];
+        const div=document.createElement('div');
+        div.className='post';
+        div.innerHTML=`<h4>${p.title}</h4><p>${p.content}</p>
+        <div class="comments-box">
+          <input id="comment-${section}-${id}" placeholder="أضف تعليقك...">
+          <button onclick="addComment('${section}','${id}')">إرسال</button>
+          <div id="commentsList-${section}-${id}"></div>
+        </div>`;
+        listEl.appendChild(div);
 
-      // عرض التعليقات
-      db.ref('posts/' + entry.id + '/comments').on('value', snap=>{
-        const list = document.getElementById('commentsList-' + entry.id);
-        list.innerHTML='';
-        snap.forEach(c=>{
-          const cm = c.val();
-          const cd = document.createElement('div');
-          cd.className='comment';
-          cd.textContent = `${cm.user||'زائر'}: ${cm.text}`;
-          list.appendChild(cd);
+        db.ref(`${section}/${id}/comments`).on('value',snap=>{
+          const list=document.getElementById(`commentsList-${section}-${id}`);
+          list.innerHTML='';
+          snap.forEach(c=>{
+            const cm=c.val();
+            const divC=document.createElement('div');
+            divC.className='comment';
+            divC.textContent=`${cm.user||'زائر'}: ${cm.text}`;
+            list.appendChild(divC);
+          });
         });
       });
     });
   });
 }
 
-function addComment(postId){
-  const input = document.getElementById('commentInput-' + postId);
-  const text = input.value.trim();
+// إضافة تعليق
+function addComment(section,id){
+  const input=document.getElementById(`comment-${section}-${id}`);
+  const text=input.value.trim();
   if(!text) return;
-  db.ref('posts/' + postId + '/comments').push({user:'زائر',text});
+  db.ref(`${section}/${id}/comments`).push({user:'زائر',text});
   input.value='';
 }
 
-// تحميل المشاركات عند فتح الصفحة
-window.addEventListener('load', loadPosts);
+// إدارة الأقسام
+function showSection(id){
+  ['news','articles','discussions'].forEach(s=>{
+    document.getElementById(s).style.display=s===id?'block':'none';
+  });
+}
+
+// الدردشة
+function toggleChat(){
+  const chat=document.getElementById('chatBox');
+  chat.style.display=chat.style.display==='none'?'block':'none';
+}
+
+function sendMessage(){
+  const msg=document.getElementById('chatText').value.trim();
+  if(!msg) return;
+  db.ref('chat').push({user:'زائر',text:msg});
+  document.getElementById('chatText').value='';
+}
+
+// تحميل الدردشة
+db.ref('chat').on('value',snapshot=>{
+  const chatDiv=document.getElementById('chatMessages');
+  chatDiv.innerHTML='';
+  snapshot.forEach(c=>{
+    const cm=c.val();
+    const divC=document.createElement('div');
+    divC.textContent=`${cm.user||'زائر'}: ${cm.text}`;
+    chatDiv.appendChild(divC);
+    chatDiv.scrollTop=chatDiv.scrollHeight;
+  });
+});
 </script>
 
 </body>
