@@ -1,217 +1,204 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlHadari Net - الحضري نت</title>
-  <style>
-    body {
-      font-family: 'Tahoma', sans-serif;
-      margin: 0; padding: 0;
-      background-color: #f5f5f5;
-      text-align: center;
-    }
-    header {
-      background-color: #003366;
-      color: #fff;
-      padding: 20px;
-      font-size: 28px;
-    }
-    nav {
-      background-color: #004080;
-      padding: 10px;
-    }
-    nav a {
-      color: white;
-      margin: 0 12px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    section {
-      display: none;
-      margin: 40px auto;
-      max-width: 500px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
-    section.active { display: block; }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    button {
-      background-color: #003366;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #0055aa;
-    }
-    .success { color: green; }
-    .error { color: red; }
-    footer {
-      margin-top: 40px;
-      background-color: #003366;
-      color: #ccc;
-      padding: 12px;
-      font-size: 14px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منتدى الحضري الثقافي - تحكم كامل</title>
+<style>
+body{font-family:"Cairo",sans-serif;background:#f2f5f8;margin:0;padding:0}
+header{background:#6a1b9a;color:#fff;padding:20px;text-align:center;font-size:28px;font-weight:bold}
+nav{background:#4a148c;color:#fff;padding:10px;text-align:center}
+nav a{color:#fff;margin:0 10px;text-decoration:none;font-weight:bold}
+nav a:hover{text-decoration:underline}
+.container{max-width:900px;margin:20px auto;padding:15px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
+input,textarea,select,button{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;font-size:14px}
+button{background:#6a1b9a;color:#fff;border:none;cursor:pointer;font-weight:bold}
+button:hover{background:#4a148c}
+.post{border-bottom:1px solid #ddd;padding:15px 0}
+.comment{background:#f0f0f0;margin:6px 0;padding:8px;border-radius:5px;font-size:14px}
+.comments-box{margin-top:10px}
+#chatBox{position:fixed;bottom:0;right:20px;width:300px;background:#fff;border:1px solid #ccc;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.2);display:none}
+#chatHeader{background:#6a1b9a;color:#fff;padding:10px;border-top-left-radius:10px;border-top-right-radius:10px;text-align:center;cursor:pointer}
+#chatMessages{height:200px;overflow-y:auto;padding:10px;border-top:1px solid #ddd;border-bottom:1px solid #ddd}
+#chatInput{display:flex}
+#chatInput input{flex:1;border:none;border-radius:0}
+#chatInput button{border-radius:0}
+.admin-panel{background:#eef3ff;padding:10px;border-radius:10px;margin-bottom:20px}
+#status{margin-top:8px;font-weight:bold;color:green}
+</style>
 </head>
 <body>
 
-<header>🌐 AlHadari Net - الحضري نت</header>
-
+<header>منتدى الحضري الثقافي - تحكم كامل</header>
 <nav>
-  <a href="#" onclick="showSection('home')">الرئيسية</a>
-  <a href="#" onclick="showSection('courses')">الدورات</a>
-  <a href="#" onclick="showSection('about')">عن الموقع</a>
-  <a href="#" onclick="showSection('register')">تسجيل</a>
-  <a href="#" onclick="showSection('login')">دخول</a>
-  <a href="#" onclick="showSection('dashboard')">لوحة التحكم</a>
+  <a href="#" onclick="showSection('news')">أخبار ثقافية</a>
+  <a href="#" onclick="showSection('articles')">مقالات</a>
+  <a href="#" onclick="showSection('discussions')">نقاشات</a>
+  <a href="#" onclick="toggleChat()">💬 دردشة</a>
 </nav>
 
-<!-- الأقسام -->
-<section id="home" class="active">
-  <h2>مرحبًا بك في الحضري نت</h2>
-  <p>منصة تعليمية متكاملة لتعلم المهارات التقنية والإدارية.</p>
-</section>
+<div class="container">
 
-<section id="courses">
-  <h2>الدورات المتاحة</h2>
-  <ul>
-    <li>دورة HTML و CSS</li>
-    <li>دورة JavaScript</li>
-    <li>دورة Firebase & Web</li>
-  </ul>
-</section>
+  <!-- لوحة التحكم لك فقط -->
+  <div class="admin-panel" id="adminPanel">
+    <h3>لوحة تحكم المشرف</h3>
+    <input type="text" id="postTitle" placeholder="عنوان المشاركة">
+    <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
+    <select id="postCategory">
+      <option value="news">أخبار ثقافية</option>
+      <option value="articles">مقالات</option>
+      <option value="discussions">نقاشات</option>
+    </select>
+    <button onclick="addPost()">نشر المشاركة</button>
+    <p id="status"></p>
+  </div>
 
-<section id="about">
-  <h2>عن الموقع</h2>
-  <p>موقع الحضري نت يهدف لتقديم محتوى تعليمي عالي الجودة لجميع المستخدمين.</p>
-</section>
+  <!-- أقسام المنتدى -->
+  <div id="news" class="section">
+    <h3>أخبار ثقافية</h3>
+    <div id="newsList">جارٍ تحميل المشاركات...</div>
+  </div>
+  <div id="articles" class="section" style="display:none">
+    <h3>مقالات</h3>
+    <div id="articlesList">جارٍ تحميل المقالات...</div>
+  </div>
+  <div id="discussions" class="section" style="display:none">
+    <h3>نقاشات</h3>
+    <div id="discussionsList">جارٍ تحميل النقاشات...</div>
+  </div>
 
-<section id="register">
-  <h2>تسجيل مستخدم جديد</h2>
-  <input type="text" id="regName" placeholder="الاسم الكامل"><br>
-  <input type="email" id="regEmail" placeholder="البريد الإلكتروني"><br>
-  <input type="password" id="regPass" placeholder="كلمة المرور"><br>
-  <button onclick="registerUser()">تسجيل</button>
-  <p id="regMsg"></p>
-</section>
+</div>
 
-<section id="login">
-  <h2>تسجيل الدخول</h2>
-  <input type="email" id="loginEmail" placeholder="البريد الإلكتروني"><br>
-  <input type="password" id="loginPass" placeholder="كلمة المرور"><br>
-  <button onclick="loginUser()">دخول</button>
-  <p id="loginMsg"></p>
-</section>
+<!-- دردشة -->
+<div id="chatBox">
+  <div id="chatHeader" onclick="toggleChat()">الدردشة</div>
+  <div id="chatMessages"></div>
+  <div id="chatInput">
+    <input type="text" id="chatText" placeholder="اكتب رسالة...">
+    <button onclick="sendMessage()">إرسال</button>
+  </div>
+</div>
 
-<section id="dashboard">
-  <h2>لوحة التحكم</h2>
-  <p>أهلاً بك! هنا يمكنك مشاهدة بياناتك.</p>
-  <button onclick="testSave()">اختبار الاتصال بـ Firestore</button>
-</section>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
 
-<footer>
-  &copy; 2025 AlHadari Net | جميع الحقوق محفوظة
-</footer>
+<script>
+/* ======== إعدادات Firebase ======== */
+const firebaseConfig = {
+  apiKey: "ضع_apiKey_هنا",
+  authDomain: "ضع_authDomain_هنا",
+  databaseURL: "https://alhadari-net-default-rtdb.firebaseio.com",
+  projectId: "ضع_projectId_هنا",
+  storageBucket: "ضع_projectId_هنا.appspot.com",
+  messagingSenderId: "ضع_messagingSenderId_هنا",
+  appId: "ضع_appId_هنا"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-<!-- Firebase JS -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-    authDomain: "alhadari-net.firebaseapp.com",
-    projectId: "alhadari-net",
-    storageBucket: "alhadari-net.firebasestorage.app",
-    messagingSenderId: "465757130283",
-    appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
-    measurementId: "G-DK4L0CDHY4"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // ---- دوال التنقل بين الأقسام ----
-  window.showSection = function(id) {
-    const sections = document.querySelectorAll("section");
-    sections.forEach(sec => sec.classList.remove("active"));
-    const active = document.getElementById(id);
-    if(active) active.classList.add("active");
+/* لوحة تحكم المشرف */
+const adminPass = "221133";  // أنت فقط تعرفها
+window.addEventListener('load',()=>{
+  const pass = prompt("أدخل كلمة مرور المشرف:");
+  if(pass===adminPass){
+    document.getElementById('adminPanel').style.display='block';
+  } else {
+    document.getElementById('adminPanel').style.display='none';
   }
+  loadPosts();
+});
 
-  // ---- تسجيل مستخدم جديد ----
-  window.registerUser = async function() {
-    const name = document.getElementById("regName").value;
-    const email = document.getElementById("regEmail").value;
-    const password = document.getElementById("regPass").value;
-    const msg = document.getElementById("regMsg");
+// إضافة مشاركة (للمشرف فقط)
+function addPost(){
+  const title=document.getElementById('postTitle').value.trim();
+  const content=document.getElementById('postContent').value.trim();
+  const category=document.getElementById('postCategory').value;
+  const status=document.getElementById('status');
+  status.textContent='';
+  if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى";return;}
+  db.ref(category).push({title,content,createdAt:Date.now()});
+  document.getElementById('postTitle').value='';
+  document.getElementById('postContent').value='';
+  status.textContent="✅ تم نشر المشاركة";
+}
 
-    try {
-      await addDoc(collection(db, "users"), {
-        name, email, password, createdAt: new Date()
+// تحميل المشاركات لكل قسم
+function loadPosts(){
+  ['news','articles','discussions'].forEach(section=>{
+    db.ref(section).orderByChild('createdAt').on('value',snapshot=>{
+      const listEl=document.getElementById(section+'List');
+      listEl.innerHTML='';
+      const data=snapshot.val();
+      if(!data){listEl.innerHTML='<p>لا توجد مشاركات بعد.</p>'; return;}
+      Object.keys(data).sort((a,b)=>data[b].createdAt-data[a].createdAt).forEach(id=>{
+        const p=data[id];
+        const div=document.createElement('div');
+        div.className='post';
+        div.innerHTML=`<h4>${p.title}</h4><p>${p.content}</p>
+        <div class="comments-box">
+          <input id="comment-${section}-${id}" placeholder="أضف تعليقك...">
+          <button onclick="addComment('${section}','${id}')">إرسال</button>
+          <div id="commentsList-${section}-${id}"></div>
+        </div>`;
+        listEl.appendChild(div);
+
+        // عرض التعليقات
+        db.ref(`${section}/${id}/comments`).on('value',snap=>{
+          const list=document.getElementById(`commentsList-${section}-${id}`);
+          list.innerHTML='';
+          snap.forEach(c=>{
+            const cm=c.val();
+            const divC=document.createElement('div');
+            divC.className='comment';
+            divC.textContent=`${cm.user||'زائر'}: ${cm.text}`;
+            list.appendChild(divC);
+          });
+        });
       });
-      msg.textContent = "✅ تم التسجيل بنجاح!";
-      msg.className = "success";
-    } catch(e) {
-      console.error(e);
-      msg.textContent = "❌ حدث خطأ أثناء التسجيل.";
-      msg.className = "error";
-    }
-  }
+    });
+  });
+}
 
-  // ---- تسجيل الدخول ----
-  window.loginUser = async function() {
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPass").value;
-    const msg = document.getElementById("loginMsg");
+// إضافة تعليق للزوار فقط
+function addComment(section,id){
+  const input=document.getElementById(`comment-${section}-${id}`);
+  const text=input.value.trim();
+  if(!text) return;
+  db.ref(`${section}/${id}/comments`).push({user:'زائر',text});
+  input.value='';
+}
 
-    try {
-      const q = query(collection(db, "users"), where("email", "==", email), where("password", "==", password));
-      const snapshot = await getDocs(q);
-      if(snapshot.empty) {
-        msg.textContent = "❌ البريد أو كلمة المرور خاطئة.";
-        msg.className = "error";
-      } else {
-        msg.textContent = "✅ تم تسجيل الدخول بنجاح!";
-        msg.className = "success";
-        showSection("dashboard");
-      }
-    } catch(e) {
-      console.error(e);
-      msg.textContent = "❌ حدث خطأ أثناء الدخول.";
-      msg.className = "error";
-    }
-  }
+// أقسام المنتدى
+function showSection(id){
+  ['news','articles','discussions'].forEach(s=>{
+    document.getElementById(s).style.display=s===id?'block':'none';
+  });
+}
 
-  // ---- زر اختبار الاتصال ----
-  window.testSave = async function() {
-    try {
-      await addDoc(collection(db, "test"), { message: "تم الاتصال بنجاح", date: new Date() });
-      alert("✅ تم الاتصال وحفظ البيانات!");
-    } catch(e) {
-      console.error(e);
-      alert("❌ خطأ أثناء الاتصال: " + e.message);
-    }
-  }
-
+// دردشة
+function toggleChat(){
+  const chat=document.getElementById('chatBox');
+  chat.style.display=chat.style.display==='none'?'block':'none';
+}
+function sendMessage(){
+  const msg=document.getElementById('chatText').value.trim();
+  if(!msg) return;
+  db.ref('chat').push({user:'زائر',text:msg});
+  document.getElementById('chatText').value='';
+}
+// تحميل الدردشة
+db.ref('chat').on('value',snapshot=>{
+  const chatDiv=document.getElementById('chatMessages');
+  chatDiv.innerHTML='';
+  snapshot.forEach(c=>{
+    const cm=c.val();
+    const divC=document.createElement('div');
+    divC.textContent=`${cm.user||'زائر'}: ${cm.text}`;
+    chatDiv.appendChild(divC);
+    chatDiv.scrollTop=chatDiv.scrollHeight;
+  });
+});
 </script>
 
 </body>
