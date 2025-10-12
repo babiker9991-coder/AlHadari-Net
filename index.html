@@ -3,101 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحضري نت رياضة</title>
+<title>🏆 الحضري نت رياضة</title>
 <style>
-  body {
-    font-family: "Cairo", sans-serif;
-    background: linear-gradient(180deg,#f4f4f4,#d9e4f5);
-    margin: 0;
-    padding: 0;
-  }
-  header {
-    background: #003366;
-    color: #fff;
-    padding: 15px;
-    text-align: center;
-    font-size: 24px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  }
-  .container {
-    width: 90%;
-    max-width: 900px;
-    margin: 20px auto;
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  }
-  .admin-panel {
-    display: none;
-    margin-bottom: 20px;
-    background: #eef;
-    padding: 15px;
-    border-radius: 10px;
-  }
-  input, textarea, button {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
-  button {
-    background: #003366;
-    color: white;
-    cursor: pointer;
-  }
-  button:hover { background: #0055aa; }
-  .news-item {
-    background: #fafafa;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    overflow: hidden;
-  }
-  .news-item img {
-    width: 100%;
-    border-bottom: 3px solid #003366;
-  }
-  .news-item h3 {
-    margin: 10px;
-    color: #003366;
-  }
-  .actions {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 15px 10px;
-  }
-  .like-btn, .comment-btn {
-    background: none;
-    border: none;
-    color: #003366;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  .like-btn:hover, .comment-btn:hover {
-    color: #ff3333;
-  }
-  .comments {
-    padding: 10px 20px;
-    border-top: 1px solid #ccc;
-  }
-  .comment {
-    margin-bottom: 8px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #eee;
-  }
+body {
+  font-family: "Cairo", sans-serif;
+  background: #f4f7fb;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background: #003366;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  font-size: 26px;
+  font-weight: bold;
+}
+.container {
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+input, textarea, button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #003366;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+}
+button:hover {
+  background: #0055aa;
+}
+.news-item {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+.news-item img {
+  width: 100%;
+  border-radius: 6px;
+}
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.comment-box {
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+.comment {
+  background: #f0f0f0;
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 5px;
+}
+.admin-panel {display: none; background: #eef3ff; padding: 10px; border-radius: 10px;}
 </style>
 </head>
 <body>
 
-<header>🏆 الحضري نت رياضة</header>
+<header>الحضري نت رياضة</header>
 
 <div class="container">
-
-  <!-- لوحة تحكم المدير -->
   <div class="admin-panel" id="adminPanel">
-    <h2>إضافة خبر جديد</h2>
+    <h3>إضافة خبر جديد</h3>
     <input type="text" id="title" placeholder="عنوان الخبر">
     <textarea id="content" placeholder="محتوى الخبر"></textarea>
     <input type="file" id="image">
@@ -105,137 +86,130 @@
     <p id="status"></p>
   </div>
 
-  <h2 style="text-align:center;color:#003366;">📰 آخر الأخبار الرياضية</h2>
+  <h2 style="text-align:center;color:#003366;">📰 آخر الأخبار</h2>
   <div id="newsList"></div>
 </div>
 
 <!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js"></script>
 
 <script>
-  // إعدادات Firebase الخاصة بك
-  const firebaseConfig = {
-    apiKey: "ضع هنا مفتاحك",
-    authDomain: "ضع هنا",
-    databaseURL: "ضع هنا",
-    projectId: "ضع هنا",
-    storageBucket: "ضع هنا",
-    messagingSenderId: "ضع هنا",
-    appId: "ضع هنا"
-  };
-  firebase.initializeApp(firebaseConfig);
+// ضع إعداداتك الخاصة من Firebase هنا 👇
+const firebaseConfig = {
+  apiKey: "ضع_مفتاحك_هنا",
+  authDomain: "ضع_الدومين_هنا",
+  databaseURL: "ضع_رابط_القاعدة_هنا",
+  projectId: "ضع_ID_المشروع",
+  storageBucket: "ضع_storageBucket_هنا",
+  messagingSenderId: "ضع_الرقم_هنا",
+  appId: "ضع_AppID_هنا"
+};
+firebase.initializeApp(firebaseConfig);
 
-  const db = firebase.database();
-  const storage = firebase.storage();
+const db = firebase.database();
+const storage = firebase.storage();
 
-  // البريد المسموح له بالنشر
-  const adminEmail = "babiker9991@gmail.com";
+const adminEmail = "babiker9991@gmail.com";
+const currentUser = adminEmail; // مؤقتًا المدير فقط
 
-  // لوحة التحكم تظهر فقط للمدير
-  const currentUser = adminEmail; // مؤقتًا (يمكنك ربطها بنظام تسجيل لاحق)
-  if (currentUser === adminEmail) {
-    document.getElementById("adminPanel").style.display = "block";
+if (currentUser === adminEmail) {
+  document.getElementById("adminPanel").style.display = "block";
+}
+
+async function addNews() {
+  const title = document.getElementById("title").value;
+  const content = document.getElementById("content").value;
+  const imageFile = document.getElementById("image").files[0];
+  const status = document.getElementById("status");
+
+  if (!title || !content || !imageFile) {
+    status.innerText = "⚠️ الرجاء تعبئة جميع الحقول";
+    return;
   }
 
-  // إضافة خبر جديد
-  async function addNews() {
-    const title = document.getElementById("title").value;
-    const content = document.getElementById("content").value;
-    const imageFile = document.getElementById("image").files[0];
-    const status = document.getElementById("status");
+  status.innerText = "⏳ جاري الرفع...";
 
-    if (!title || !content || !imageFile) {
-      status.innerText = "⚠️ الرجاء تعبئة جميع الحقول.";
-      return;
-    }
-
-    status.innerText = "⏳ جاري نشر الخبر...";
-    const imageRef = storage.ref("images/" + imageFile.name);
+  try {
+    const imageRef = storage.ref("images/" + Date.now() + "_" + imageFile.name);
     await imageRef.put(imageFile);
     const imageUrl = await imageRef.getDownloadURL();
 
-    const newsRef = db.ref("news").push();
-    newsRef.set({
+    await db.ref("news").push({
       title,
       content,
       imageUrl,
-      likes: 0,
-      comments: {}
+      likes: 0
     });
 
-    status.innerText = "✅ تم نشر الخبر بنجاح!";
+    status.innerText = "✅ تم النشر بنجاح!";
     document.getElementById("title").value = "";
     document.getElementById("content").value = "";
     document.getElementById("image").value = "";
+  } catch (err) {
+    status.innerText = "❌ خطأ: " + err.message;
   }
+}
 
-  // عرض الأخبار
-  const newsList = document.getElementById("newsList");
-  db.ref("news").on("value", (snapshot) => {
-    newsList.innerHTML = "";
-    snapshot.forEach((child) => {
-      const news = child.val();
-      const key = child.key;
-      const div = document.createElement("div");
-      div.classList.add("news-item");
-      div.innerHTML = `
-        <img src="${news.imageUrl}" alt="">
-        <h3>${news.title}</h3>
-        <p style="padding:0 15px;">${news.content}</p>
-        <div class="actions">
-          <button class="like-btn" onclick="likeNews('${key}')">❤️ ${news.likes || 0}</button>
-          <button class="comment-btn" onclick="showComments('${key}')">💬 تعليق</button>
-        </div>
-        <div class="comments" id="comments-${key}" style="display:none;"></div>
-      `;
-      newsList.prepend(div);
-    });
-  });
+const newsList = document.getElementById("newsList");
 
-  // زر الإعجاب
-  function likeNews(id) {
-    const ref = db.ref("news/" + id + "/likes");
-    ref.transaction(likes => (likes || 0) + 1);
-  }
+db.ref("news").on("value", (snapshot) => {
+  newsList.innerHTML = "";
+  snapshot.forEach((child) => {
+    const news = child.val();
+    const key = child.key;
 
-  // عرض وإضافة التعليقات
-  function showComments(id) {
-    const section = document.getElementById("comments-" + id);
-    section.style.display = section.style.display === "none" ? "block" : "none";
-
-    section.innerHTML = `
-      <input id="comment-${id}" placeholder="أضف تعليقك...">
-      <button onclick="addComment('${id}')">إرسال</button>
-      <div id="comments-list-${id}"></div>
+    const div = document.createElement("div");
+    div.classList.add("news-item");
+    div.innerHTML = `
+      <h3>${news.title}</h3>
+      <img src="${news.imageUrl}" alt="">
+      <p>${news.content}</p>
+      <div class="actions">
+        <button onclick="likeNews('${key}')">❤️ ${news.likes || 0}</button>
+        <button onclick="toggleComments('${key}')">💬 التعليقات</button>
+      </div>
+      <div id="comments-${key}" class="comment-box" style="display:none;">
+        <input id="comment-input-${key}" placeholder="أضف تعليقك...">
+        <button onclick="addComment('${key}')">إرسال</button>
+        <div id="comments-list-${key}"></div>
+      </div>
     `;
+    newsList.prepend(div);
 
-    db.ref("news/" + id + "/comments").on("value", (snapshot) => {
-      const list = document.getElementById("comments-list-" + id);
+    db.ref(`news/${key}/comments`).on("value", (commentsSnapshot) => {
+      const list = document.getElementById(`comments-list-${key}`);
       list.innerHTML = "";
-      snapshot.forEach((child) => {
-        const c = child.val();
-        const div = document.createElement("div");
-        div.classList.add("comment");
-        div.innerText = `${c.user}: ${c.text}`;
-        list.appendChild(div);
+      commentsSnapshot.forEach((c) => {
+        const data = c.val();
+        const commentDiv = document.createElement("div");
+        commentDiv.classList.add("comment");
+        commentDiv.textContent = `${data.user}: ${data.text}`;
+        list.appendChild(commentDiv);
       });
     });
-  }
+  });
+});
 
-  // إضافة تعليق
-  function addComment(id) {
-    const input = document.getElementById("comment-" + id);
-    const text = input.value;
-    if (!text) return;
-    const user = currentUser.split("@")[0]; // الاسم من البريد
-    db.ref("news/" + id + "/comments").push({
-      user,
-      text
-    });
-    input.value = "";
-  }
+function likeNews(id) {
+  const ref = db.ref(`news/${id}/likes`);
+  ref.transaction(likes => (likes || 0) + 1);
+}
+
+function toggleComments(id) {
+  const section = document.getElementById(`comments-${id}`);
+  section.style.display = section.style.display === "none" ? "block" : "none";
+}
+
+function addComment(id) {
+  const input = document.getElementById(`comment-input-${id}`);
+  const text = input.value.trim();
+  if (!text) return;
+  const user = currentUser.split("@")[0];
+  db.ref(`news/${id}/comments`).push({ user, text });
+  input.value = "";
+}
 </script>
 
 </body>
