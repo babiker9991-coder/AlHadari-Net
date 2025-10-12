@@ -1,217 +1,242 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>منتدى الحضري نت الرياضي 🏆</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحضري نت رياضة</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-body {
-  font-family: 'Cairo', sans-serif;
-  background: linear-gradient(135deg, #001f3f, #004a9f);
-  margin: 0; color: #fff; min-height: 100vh;
-  display: flex; flex-direction: column; align-items: center;
-}
-header {
-  width: 100%; background: rgba(0,0,0,0.3);
-  text-align: center; padding: 25px 0;
-  font-size: 32px; font-weight: 700; letter-spacing: 1px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  animation: glow 3s infinite alternate;
-}
-@keyframes glow {
-  from { text-shadow: 0 0 5px #fff, 0 0 10px #04b2ff; }
-  to { text-shadow: 0 0 20px #04b2ff, 0 0 40px #0099ff; }
-}
-nav {
-  background: rgba(255,255,255,0.1);
-  width: 100%; text-align: center; padding: 10px 0;
-  backdrop-filter: blur(8px);
-}
-nav a {
-  color: #fff; text-decoration: none; margin: 0 15px;
-  font-weight: 600; transition: 0.3s;
-}
-nav a:hover { color: #04b2ff; text-shadow: 0 0 8px #04b2ff; }
-
-section {
-  display: none;
-  width: 95%; max-width: 1000px;
-  background: rgba(255,255,255,0.1);
-  margin: 25px auto; padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
-section.active { display: block; }
-
-input, textarea, button {
-  width: 100%; border: none; border-radius: 10px;
-  margin-top: 10px; padding: 12px;
-  font-size: 16px; outline: none;
-}
-input, textarea {
-  background: rgba(255,255,255,0.8);
-  color: #000;
-}
-button {
-  background: linear-gradient(45deg, #0099ff, #00ccff);
-  color: #fff; font-weight: bold; cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 10px #00ccff;
-}
-
-.news-item {
-  background: rgba(255,255,255,0.15);
-  border-radius: 12px; padding: 20px; margin: 15px 0;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.news-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 20px #04b2ff;
-}
-.news-item h3 {
-  color: #fff; text-shadow: 0 0 6px #00ccff;
-}
-.news-item p { color: #ddd; line-height: 1.6; }
-.news-item img {
-  width: 100%; border-radius: 10px; margin-top: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
-
-#msg { margin-top: 10px; font-weight: bold; }
-.success { color: #0f0; }
-.error { color: #ff4444; }
-
-footer {
-  text-align: center; padding: 10px;
-  font-size: 14px; color: #ccc;
-  background: rgba(0,0,0,0.2);
-  margin-top: auto;
-}
+  body {
+    font-family: "Cairo", sans-serif;
+    background: linear-gradient(180deg,#f4f4f4,#d9e4f5);
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background: #003366;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .container {
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+  .admin-panel {
+    display: none;
+    margin-bottom: 20px;
+    background: #eef;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  input, textarea, button {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  button {
+    background: #003366;
+    color: white;
+    cursor: pointer;
+  }
+  button:hover { background: #0055aa; }
+  .news-item {
+    background: #fafafa;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+  .news-item img {
+    width: 100%;
+    border-bottom: 3px solid #003366;
+  }
+  .news-item h3 {
+    margin: 10px;
+    color: #003366;
+  }
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px 10px;
+  }
+  .like-btn, .comment-btn {
+    background: none;
+    border: none;
+    color: #003366;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .like-btn:hover, .comment-btn:hover {
+    color: #ff3333;
+  }
+  .comments {
+    padding: 10px 20px;
+    border-top: 1px solid #ccc;
+  }
+  .comment {
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+  }
 </style>
 </head>
 <body>
 
-<header>🏆 منتدى الحضري نت الرياضي</header>
-<nav>
-  <a href="#" onclick="showSection('home')">الصفحة الرئيسية</a>
-  <a href="#" id="dashboard-link" onclick="showSection('dashboard')" style="display:none;">إدارة المنتدى</a>
-</nav>
+<header>🏆 الحضري نت رياضة</header>
 
-<section id="home" class="active">
-  <h2 style="text-align:center; text-shadow:0 0 10px #04b2ff;">📰 آخر المواضيع</h2>
-  <div id="news-list"></div>
-</section>
+<div class="container">
 
-<section id="dashboard">
-  <h2>✍️ إضافة موضوع جديد</h2>
-  <input type="text" id="title" placeholder="عنوان الموضوع" />
-  <textarea id="content" rows="4" placeholder="محتوى الموضوع"></textarea>
-  <input type="file" id="image" accept="image/*" />
-  <button onclick="addNews()">نشر الموضوع</button>
-  <p id="msg"></p>
-</section>
+  <!-- لوحة تحكم المدير -->
+  <div class="admin-panel" id="adminPanel">
+    <h2>إضافة خبر جديد</h2>
+    <input type="text" id="title" placeholder="عنوان الخبر">
+    <textarea id="content" placeholder="محتوى الخبر"></textarea>
+    <input type="file" id="image">
+    <button onclick="addNews()">نشر الخبر</button>
+    <p id="status"></p>
+  </div>
 
-<footer>© 2025 الحضري نت - تصميم وتألق بإشرافك 🌟</footer>
+  <h2 style="text-align:center;color:#003366;">📰 آخر الأخبار الرياضية</h2>
+  <div id="newsList"></div>
+</div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-  authDomain: "alhadari-net.firebaseapp.com",
-  projectId: "alhadari-net",
-  storageBucket: "alhadari-net.firebasestorage.app",
-  messagingSenderId: "465757130283",
-  appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
+  // إعدادات Firebase الخاصة بك
+  const firebaseConfig = {
+    apiKey: "ضع هنا مفتاحك",
+    authDomain: "ضع هنا",
+    databaseURL: "ضع هنا",
+    projectId: "ضع هنا",
+    storageBucket: "ضع هنا",
+    messagingSenderId: "ضع هنا",
+    appId: "ضع هنا"
+  };
+  firebase.initializeApp(firebaseConfig);
 
-let isAdmin = false;
-const adminPass = "221133";
+  const db = firebase.database();
+  const storage = firebase.storage();
 
-window.onload = () => {
-  const pass = prompt("🔐 أدخل كلمة مرور الإدارة (أو اضغط إلغاء للدخول كزائر):");
-  if (pass === adminPass) {
-    isAdmin = true;
-    document.getElementById("dashboard-link").style.display = "inline-block";
-    showSection('dashboard');
-  } else {
-    showSection('home');
+  // البريد المسموح له بالنشر
+  const adminEmail = "babiker9991@gmail.com";
+
+  // لوحة التحكم تظهر فقط للمدير
+  const currentUser = adminEmail; // مؤقتًا (يمكنك ربطها بنظام تسجيل لاحق)
+  if (currentUser === adminEmail) {
+    document.getElementById("adminPanel").style.display = "block";
   }
-  loadNews();
-};
 
-function showSection(id) {
-  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
+  // إضافة خبر جديد
+  async function addNews() {
+    const title = document.getElementById("title").value;
+    const content = document.getElementById("content").value;
+    const imageFile = document.getElementById("image").files[0];
+    const status = document.getElementById("status");
 
-async function addNews() {
-  if (!isAdmin) { alert("❌ فقط المشرف يمكنه النشر"); return; }
-  const title = document.getElementById("title").value.trim();
-  const content = document.getElementById("content").value.trim();
-  const file = document.getElementById("image").files[0];
-  const msg = document.getElementById("msg");
-  if (!title || !content) { msg.textContent = "الرجاء تعبئة جميع الحقول"; msg.className="error"; return; }
-
-  msg.textContent = "⏳ جاري النشر...";
-  let imageUrl = "";
-  try {
-    if (file) {
-      const ref = storage.ref("news_images/" + Date.now() + "_" + file.name);
-      await ref.put(file);
-      imageUrl = await ref.getDownloadURL();
+    if (!title || !content || !imageFile) {
+      status.innerText = "⚠️ الرجاء تعبئة جميع الحقول.";
+      return;
     }
-    await db.collection("sportsNews").add({
-      title, content, image: imageUrl,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
+    status.innerText = "⏳ جاري نشر الخبر...";
+    const imageRef = storage.ref("images/" + imageFile.name);
+    await imageRef.put(imageFile);
+    const imageUrl = await imageRef.getDownloadURL();
+
+    const newsRef = db.ref("news").push();
+    newsRef.set({
+      title,
+      content,
+      imageUrl,
+      likes: 0,
+      comments: {}
     });
-    msg.textContent = "✅ تم نشر الموضوع بنجاح";
-    msg.className = "success";
+
+    status.innerText = "✅ تم نشر الخبر بنجاح!";
     document.getElementById("title").value = "";
     document.getElementById("content").value = "";
     document.getElementById("image").value = "";
-    loadNews();
-  } catch (e) {
-    console.error(e);
-    msg.textContent = "❌ حدث خطأ أثناء النشر";
-    msg.className = "error";
   }
-}
 
-async function loadNews() {
-  const list = document.getElementById("news-list");
-  list.innerHTML = "<p>⏳ جاري التحميل...</p>";
-  try {
-    const snapshot = await db.collection("sportsNews").orderBy("createdAt","desc").get();
-    list.innerHTML = "";
-    snapshot.forEach(doc => {
-      const d = doc.data();
+  // عرض الأخبار
+  const newsList = document.getElementById("newsList");
+  db.ref("news").on("value", (snapshot) => {
+    newsList.innerHTML = "";
+    snapshot.forEach((child) => {
+      const news = child.val();
+      const key = child.key;
       const div = document.createElement("div");
-      div.className = "news-item";
+      div.classList.add("news-item");
       div.innerHTML = `
-        <h3>📢 ${d.title}</h3>
-        <p>${d.content}</p>
-        ${d.image ? `<img src="${d.image}" alt="صورة الموضوع" />` : ""}
+        <img src="${news.imageUrl}" alt="">
+        <h3>${news.title}</h3>
+        <p style="padding:0 15px;">${news.content}</p>
+        <div class="actions">
+          <button class="like-btn" onclick="likeNews('${key}')">❤️ ${news.likes || 0}</button>
+          <button class="comment-btn" onclick="showComments('${key}')">💬 تعليق</button>
+        </div>
+        <div class="comments" id="comments-${key}" style="display:none;"></div>
       `;
-      list.appendChild(div);
+      newsList.prepend(div);
     });
-  } catch (e) {
-    console.error(e);
-    list.innerHTML = "⚠️ تعذر تحميل المواضيع";
+  });
+
+  // زر الإعجاب
+  function likeNews(id) {
+    const ref = db.ref("news/" + id + "/likes");
+    ref.transaction(likes => (likes || 0) + 1);
   }
-}
+
+  // عرض وإضافة التعليقات
+  function showComments(id) {
+    const section = document.getElementById("comments-" + id);
+    section.style.display = section.style.display === "none" ? "block" : "none";
+
+    section.innerHTML = `
+      <input id="comment-${id}" placeholder="أضف تعليقك...">
+      <button onclick="addComment('${id}')">إرسال</button>
+      <div id="comments-list-${id}"></div>
+    `;
+
+    db.ref("news/" + id + "/comments").on("value", (snapshot) => {
+      const list = document.getElementById("comments-list-" + id);
+      list.innerHTML = "";
+      snapshot.forEach((child) => {
+        const c = child.val();
+        const div = document.createElement("div");
+        div.classList.add("comment");
+        div.innerText = `${c.user}: ${c.text}`;
+        list.appendChild(div);
+      });
+    });
+  }
+
+  // إضافة تعليق
+  function addComment(id) {
+    const input = document.getElementById("comment-" + id);
+    const text = input.value;
+    if (!text) return;
+    const user = currentUser.split("@")[0]; // الاسم من البريد
+    db.ref("news/" + id + "/comments").push({
+      user,
+      text
+    });
+    input.value = "";
+  }
 </script>
+
 </body>
 </html>
