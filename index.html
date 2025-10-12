@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منتدى الحضري الثقافي - تحكم كامل</title>
+<title>منتدى الحضري الثقافي - المشرف فقط</title>
 <style>
 body{font-family:"Cairo",sans-serif;background:#f2f5f8;margin:0;padding:0}
 header{background:#6a1b9a;color:#fff;padding:20px;text-align:center;font-size:28px;font-weight:bold}
@@ -29,7 +29,7 @@ button:hover{background:#4a148c}
 </head>
 <body>
 
-<header>منتدى الحضري الثقافي - تحكم كامل</header>
+<header>منتدى الحضري الثقافي - المشرف فقط</header>
 <nav>
   <a href="#" onclick="showSection('news')">أخبار ثقافية</a>
   <a href="#" onclick="showSection('articles')">مقالات</a>
@@ -39,7 +39,7 @@ button:hover{background:#4a148c}
 
 <div class="container">
 
-  <!-- لوحة التحكم لك فقط -->
+  <!-- لوحة التحكم -->
   <div class="admin-panel" id="adminPanel">
     <h3>لوحة تحكم المشرف</h3>
     <input type="text" id="postTitle" placeholder="عنوان المشاركة">
@@ -84,7 +84,7 @@ button:hover{background:#4a148c}
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
 
 <script>
-/* ======== إعدادات Firebase ======== */
+// ======= إعدادات Firebase =======
 const firebaseConfig = {
   apiKey: "ضع_apiKey_هنا",
   authDomain: "ضع_authDomain_هنا",
@@ -97,19 +97,20 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* لوحة تحكم المشرف */
-const adminPass = "221133";  // أنت فقط تعرفها
+// كلمة المرور للمشرف
+const adminPass = "221133"; 
 window.addEventListener('load',()=>{
   const pass = prompt("أدخل كلمة مرور المشرف:");
   if(pass===adminPass){
     document.getElementById('adminPanel').style.display='block';
   } else {
     document.getElementById('adminPanel').style.display='none';
+    alert("أنت زائر، لا يمكنك التحكم");
   }
   loadPosts();
 });
 
-// إضافة مشاركة (للمشرف فقط)
+// إضافة مشاركة
 function addPost(){
   const title=document.getElementById('postTitle').value.trim();
   const content=document.getElementById('postContent').value.trim();
@@ -123,7 +124,7 @@ function addPost(){
   status.textContent="✅ تم نشر المشاركة";
 }
 
-// تحميل المشاركات لكل قسم
+// تحميل المشاركات والتعليقات
 function loadPosts(){
   ['news','articles','discussions'].forEach(section=>{
     db.ref(section).orderByChild('createdAt').on('value',snapshot=>{
@@ -160,7 +161,7 @@ function loadPosts(){
   });
 }
 
-// إضافة تعليق للزوار فقط
+// إضافة تعليق للزوار
 function addComment(section,id){
   const input=document.getElementById(`comment-${section}-${id}`);
   const text=input.value.trim();
@@ -169,7 +170,7 @@ function addComment(section,id){
   input.value='';
 }
 
-// أقسام المنتدى
+// عرض الأقسام
 function showSection(id){
   ['news','articles','discussions'].forEach(s=>{
     document.getElementById(s).style.display=s===id?'block':'none';
