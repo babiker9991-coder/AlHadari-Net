@@ -1,216 +1,294 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🏆 الحضري نت رياضة</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>الحضري نت رياضة - اختبار التشغيل</title>
 <style>
-body {
-  font-family: "Cairo", sans-serif;
-  background: #f4f7fb;
-  margin: 0;
-  padding: 0;
-}
-header {
-  background: #003366;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-  font-size: 26px;
-  font-weight: bold;
-}
-.container {
-  width: 90%;
-  max-width: 900px;
-  margin: 20px auto;
-  background: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-input, textarea, button {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-button {
-  background: #003366;
-  color: #fff;
-  cursor: pointer;
-  font-weight: bold;
-}
-button:hover {
-  background: #0055aa;
-}
-.news-item {
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 15px;
-  margin-bottom: 20px;
-}
-.news-item img {
-  width: 100%;
-  border-radius: 6px;
-}
-.actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-.comment-box {
-  margin-top: 10px;
-  border-top: 1px solid #eee;
-  padding-top: 10px;
-}
-.comment {
-  background: #f0f0f0;
-  margin: 5px 0;
-  padding: 8px;
-  border-radius: 5px;
-}
-.admin-panel {display: none; background: #eef3ff; padding: 10px; border-radius: 10px;}
+  body{font-family:Tahoma,Arial; background:#f4f6fb; margin:0; padding:0}
+  header{background:#003366;color:#fff;padding:18px;text-align:center;font-size:20px}
+  .wrap{max-width:980px;margin:20px auto;padding:18px;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
+  input,textarea,button{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc}
+  button{background:#003366;color:#fff;border:none;cursor:pointer}
+  #status{margin-top:8px;font-weight:bold}
+  .error{color:#c62828}
+  .success{color:#2e7d32}
+  .news-item{border-bottom:1px solid #eee;padding:12px 0}
+  img.news-img{max-width:100%;border-radius:6px;margin-top:8px}
+  pre{background:#f0f0f0;padding:8px;border-radius:6px;overflow:auto}
 </style>
 </head>
 <body>
-
-<header>الحضري نت رياضة</header>
-
-<div class="container">
-  <div class="admin-panel" id="adminPanel">
-    <h3>إضافة خبر جديد</h3>
-    <input type="text" id="title" placeholder="عنوان الخبر">
-    <textarea id="content" placeholder="محتوى الخبر"></textarea>
+<header>الحضري نت رياضة — اختبار التشغيل</header>
+<div class="wrap">
+  <h3>لوحة المشرف (أدخل كلمة المرور لتظهر)</h3>
+  <p>ملاحظة: كلمة المرور الافتراضية للمشرف: <code>221133</code></p>
+  <div id="adminArea" style="display:none">
+    <input id="title" placeholder="عنوان الخبر">
+    <textarea id="content" rows="4" placeholder="محتوى الخبر"></textarea>
     <input type="file" id="image">
-    <button onclick="addNews()">نشر الخبر</button>
+    <button id="btnPublish" onclick="addNews()">نشر الخبر (رفع صورة & حفظ في DB)</button>
     <p id="status"></p>
+    <hr>
+    <button onclick="testStorage()">اختبار رفع ملف صغير (Test Upload)</button>
+    <button onclick="testDbWrite()">اختبار كتابة DB</button>
+    <pre id="debug"></pre>
   </div>
 
-  <h2 style="text-align:center;color:#003366;">📰 آخر الأخبار</h2>
-  <div id="newsList"></div>
+  <h3>آخر الأخبار</h3>
+  <div id="newsList">جارٍ تحميل الأخبار...</div>
+  <hr>
+  <h4>توجيهات تصحيحية سريعة</h4>
+  <ol>
+    <li>تأكد أن نسختك من <strong>firebaseConfig</strong> تحتوي على كل الحقول: <code>apiKey, authDomain, databaseURL, projectId, storageBucket, appId</code>.</li>
+    <li>استخدم <code>storageBucket</code> بهذا الشكل: <code>your-project-id.appspot.com</code> (ليس .firebasestorage.app).</li>
+    <li>افتح Console (F12 → Console) وانسخ أي خطأ هنا وسأفهمه مباشرة.</li>
+    <li>للتجربة السريعة ضع قواعد Realtime DB و Storage مؤقتاً كـ test (أنصح أن تفعل ذلك مؤقتاً أثناء الاختبار فقط).</li>
+  </ol>
 </div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js"></script>
+<!-- Firebase compat (Realtime DB + Storage) -->
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
 
 <script>
-// ضع إعداداتك الخاصة من Firebase هنا 👇
+/* =======================
+   --- ضع إعدادات Firebase هنا ---
+   استبدل القيم التالية بقيم مشروعك بالضبط من Firebase Console → Project settings → SDK setup
+   مثال:
+   databaseURL: "https://your-app-default-rtdb.firebaseio.com",
+   storageBucket: "your-app.appspot.com",
+   --------------------------------*/
 const firebaseConfig = {
-  apiKey: "ضع_مفتاحك_هنا",
-  authDomain: "ضع_الدومين_هنا",
-  databaseURL: "ضع_رابط_القاعدة_هنا",
-  projectId: "ضع_ID_المشروع",
-  storageBucket: "ضع_storageBucket_هنا",
-  messagingSenderId: "ضع_الرقم_هنا",
-  appId: "ضع_AppID_هنا"
+  apiKey: "ضع-apiKey-here",
+  authDomain: "ضع-authDomain-here",
+  databaseURL: "ضع-databaseURL-here",
+  projectId: "ضع-projectId-here",
+  storageBucket: "ضع-storageBucket-here", // يجب أن يكون ...appspot.com
+  messagingSenderId: "ضع-messagingSenderId-here",
+  appId: "ضع-appId-here"
 };
-firebase.initializeApp(firebaseConfig);
+/* ======================= */
+
+const debugEl = document.getElementById('debug');
+function dbg(...args){ console.log(...args); debugEl.textContent += args.map(a=> (typeof a==='object'? JSON.stringify(a,null,2): String(a)) ).join(' ') + '\n'; }
+
+try {
+  firebase.initializeApp(firebaseConfig);
+} catch(err){
+  console.error("Firebase init error:", err);
+  dbg("Firebase init error:", err);
+  document.getElementById('newsList').innerHTML = '<p class="error">خطأ في تهيئة Firebase — افحص الإعدادات في الكود.</p>';
+}
 
 const db = firebase.database();
 const storage = firebase.storage();
 
-const adminEmail = "babiker9991@gmail.com";
-const currentUser = adminEmail; // مؤقتًا المدير فقط
+// basic global
+let isAdmin = false;
+const ADMIN_PASS = "221133";
 
-if (currentUser === adminEmail) {
-  document.getElementById("adminPanel").style.display = "block";
-}
-
-async function addNews() {
-  const title = document.getElementById("title").value;
-  const content = document.getElementById("content").value;
-  const imageFile = document.getElementById("image").files[0];
-  const status = document.getElementById("status");
-
-  if (!title || !content || !imageFile) {
-    status.innerText = "⚠️ الرجاء تعبئة جميع الحقول";
-    return;
-  }
-
-  status.innerText = "⏳ جاري الرفع...";
-
+// show admin after prompt (runs on load)
+window.addEventListener('load', () => {
   try {
-    const imageRef = storage.ref("images/" + Date.now() + "_" + imageFile.name);
-    await imageRef.put(imageFile);
-    const imageUrl = await imageRef.getDownloadURL();
-
-    await db.ref("news").push({
-      title,
-      content,
-      imageUrl,
-      likes: 0
-    });
-
-    status.innerText = "✅ تم النشر بنجاح!";
-    document.getElementById("title").value = "";
-    document.getElementById("content").value = "";
-    document.getElementById("image").value = "";
-  } catch (err) {
-    status.innerText = "❌ خطأ: " + err.message;
+    const p = prompt("ادخل كلمة مرور المشرف للوصول للوحة التحكم (أو اضغط إلغاء للعرض فقط):");
+    if(p === ADMIN_PASS){
+      isAdmin = true;
+      document.getElementById('adminArea').style.display = 'block';
+    }
+    loadNews(); // always try to load news
+    attachGlobalErrorHandler();
+  } catch(e) {
+    dbg("onload err", e);
   }
-}
-
-const newsList = document.getElementById("newsList");
-
-db.ref("news").on("value", (snapshot) => {
-  newsList.innerHTML = "";
-  snapshot.forEach((child) => {
-    const news = child.val();
-    const key = child.key;
-
-    const div = document.createElement("div");
-    div.classList.add("news-item");
-    div.innerHTML = `
-      <h3>${news.title}</h3>
-      <img src="${news.imageUrl}" alt="">
-      <p>${news.content}</p>
-      <div class="actions">
-        <button onclick="likeNews('${key}')">❤️ ${news.likes || 0}</button>
-        <button onclick="toggleComments('${key}')">💬 التعليقات</button>
-      </div>
-      <div id="comments-${key}" class="comment-box" style="display:none;">
-        <input id="comment-input-${key}" placeholder="أضف تعليقك...">
-        <button onclick="addComment('${key}')">إرسال</button>
-        <div id="comments-list-${key}"></div>
-      </div>
-    `;
-    newsList.prepend(div);
-
-    db.ref(`news/${key}/comments`).on("value", (commentsSnapshot) => {
-      const list = document.getElementById(`comments-list-${key}`);
-      list.innerHTML = "";
-      commentsSnapshot.forEach((c) => {
-        const data = c.val();
-        const commentDiv = document.createElement("div");
-        commentDiv.classList.add("comment");
-        commentDiv.textContent = `${data.user}: ${data.text}`;
-        list.appendChild(commentDiv);
-      });
-    });
-  });
 });
 
-function likeNews(id) {
-  const ref = db.ref(`news/${id}/likes`);
-  ref.transaction(likes => (likes || 0) + 1);
+// attach window.onerror to capture runtime exceptions
+function attachGlobalErrorHandler(){
+  window.onerror = function(message, source, lineno, colno, error) {
+    dbg("Global Error:", message, "at", source + ":" + lineno + ":" + colno, error);
+    return false;
+  };
 }
 
-function toggleComments(id) {
-  const section = document.getElementById(`comments-${id}`);
-  section.style.display = section.style.display === "none" ? "block" : "none";
+// upload image to storage and return downloadURL
+async function uploadImageFile(file){
+  if(!file) return "";
+  const path = 'news_images/' + Date.now() + '_' + file.name;
+  const ref = storage.ref().child(path);
+  dbg("Starting upload to", path);
+  await ref.put(file);
+  const url = await ref.getDownloadURL();
+  dbg("Upload finished, URL:", url);
+  return url;
 }
 
-function addComment(id) {
-  const input = document.getElementById(`comment-input-${id}`);
-  const text = input.value.trim();
-  if (!text) return;
-  const user = currentUser.split("@")[0];
-  db.ref(`news/${id}/comments`).push({ user, text });
-  input.value = "";
+// add news (upload image then push to Realtime DB)
+async function addNews(){
+  const status = document.getElementById('status');
+  status.className = '';
+  status.textContent = '';
+  try{
+    if(!isAdmin){ status.textContent = "❌ فقط المشرف يمكنه النشر."; status.className = 'error'; return; }
+    const title = document.getElementById('title').value.trim();
+    const content = document.getElementById('content').value.trim();
+    const fileEl = document.getElementById('image');
+    if(!title || !content){ status.textContent = "❗ يجب إدخال العنوان والمحتوى."; status.className='error'; return; }
+    status.textContent = '⏳ جارٍ رفع الصورة (إن وُجدت) ثم حفظ الخبر...';
+    // upload
+    let imageUrl = "";
+    if(fileEl.files && fileEl.files[0]) {
+      imageUrl = await uploadImageFile(fileEl.files[0]);
+    }
+    // write to Realtime DB
+    const newsRef = db.ref('news').push();
+    await newsRef.set({
+      title, content, imageUrl, likes:0, createdAt: Date.now()
+    });
+    status.textContent = '✅ تم نشر الخبر بنجاح.';
+    status.className = 'success';
+    // clear fields
+    document.getElementById('title').value = '';
+    document.getElementById('content').value = '';
+    fileEl.value = '';
+    // reload list
+    loadNews();
+  } catch(err){
+    console.error("addNews error:", err);
+    dbg("addNews error:", err);
+    status.textContent = '❌ خطأ أثناء النشر: ' + (err.message || err);
+    status.className = 'error';
+  }
+}
+
+// load news list from Realtime DB
+function loadNews(){
+  const list = document.getElementById('newsList');
+  list.innerHTML = '⏳ جارٍ تحميل الأخبار...';
+  db.ref('news').orderByChild('createdAt').on('value', snapshot => {
+    list.innerHTML = '';
+    const data = snapshot.val();
+    if(!data){ list.innerHTML = '<p>لا توجد أخبار بعد.</p>'; return; }
+    // snapshot is ordered asc, we'll show newest first
+    const entries = Object.keys(data).map(k => ({id:k, v:data[k]})).sort((a,b)=> b.v.createdAt - a.v.createdAt);
+    entries.forEach(entry => {
+      const d = entry.v;
+      const div = document.createElement('div');
+      div.className = 'news-item';
+      div.innerHTML = `<h3>${escapeHtml(d.title)}</h3>
+                       <p>${escapeHtml(d.content)}</p>
+                       ${d.imageUrl? `<img class="news-img" src="${d.imageUrl}" alt="صورة">` : ''}
+                       <div style="margin-top:8px;color:#666;font-size:13px">نُشر: ${new Date(d.createdAt).toLocaleString()}</div>
+                       <div id="actions-${entry.id}"></div>
+                       <div id="comments-${entry.id}"></div>`;
+      list.appendChild(div);
+      renderActions(entry.id, d);
+      renderComments(entry.id);
+    });
+  }, err => {
+    console.error("loadNews on error:", err);
+    dbg("loadNews on error:", err);
+    list.innerHTML = '<p class="error">خطأ في تحميل الأخبار - افتح Console لظهار التفاصيل</p>';
+  });
+}
+
+// render like button and comment input
+function renderActions(newsId, data){
+  const container = document.getElementById('actions-' + newsId);
+  container.innerHTML = '';
+  const likeBtn = document.createElement('button');
+  likeBtn.textContent = `❤️ ${data.likes || 0}`;
+  likeBtn.onclick = () => {
+    const likesRef = db.ref('news/' + newsId + '/likes');
+    likesRef.transaction(l => (l||0) + 1);
+  };
+  const toggleBtn = document.createElement('button');
+  toggleBtn.style.marginLeft = '8px';
+  toggleBtn.textContent = '💬 تعليق';
+  toggleBtn.onclick = () => {
+    const comm = document.getElementById('comments-' + newsId);
+    if(comm.style.display === 'block') { comm.style.display = 'none'; } else { comm.style.display = 'block'; }
+  };
+  container.appendChild(likeBtn);
+  container.appendChild(toggleBtn);
+}
+
+// render comments section and listen for updates
+function renderComments(newsId){
+  const cDiv = document.getElementById('comments-' + newsId);
+  cDiv.innerHTML = '';
+  cDiv.style.display = 'none';
+  // input and button
+  const input = document.createElement('input');
+  input.placeholder = 'اكتب تعليقك ثم اضغط إرسال';
+  input.style.marginTop = '8px';
+  const send = document.createElement('button');
+  send.textContent = 'إرسال';
+  send.onclick = () => {
+    const text = input.value.trim();
+    if(!text) return alert('أدخل تعليق');
+    // for now use "زائر" as user (or use authenticated email if you add auth)
+    const user = 'زائر';
+    db.ref('news/' + newsId + '/comments').push({user, text, createdAt: Date.now()});
+    input.value = '';
+  };
+  cDiv.appendChild(input);
+  cDiv.appendChild(send);
+  // comments list
+  const list = document.createElement('div');
+  list.style.marginTop = '8px';
+  cDiv.appendChild(list);
+
+  db.ref('news/' + newsId + '/comments').on('value', snap => {
+    list.innerHTML = '';
+    const val = snap.val();
+    if(!val) { list.innerHTML = '<div style="color:#666">لا تعليقات بعد</div>'; return; }
+    const items = Object.keys(val).map(k=> ({id:k, v:val[k]})).sort((a,b)=> a.v.createdAt - b.v.createdAt);
+    items.forEach(it => {
+      const cd = document.createElement('div');
+      cd.style.padding='6px';
+      cd.style.borderBottom='1px solid #eee';
+      cd.innerHTML = `<strong>${escapeHtml(it.v.user)}</strong>: ${escapeHtml(it.v.text)}<div style="font-size:11px;color:#666">${new Date(it.v.createdAt).toLocaleString()}</div>`;
+      list.appendChild(cd);
+    });
+  });
+}
+
+// small helpers
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ========== Test utilities for debugging ========== */
+async function testStorage(){
+  const msg = document.getElementById('status');
+  try{
+    const blob = new Blob(['test'], {type:'text/plain'});
+    const ref = storage.ref().child('test/test_' + Date.now() + '.txt');
+    await ref.put(blob);
+    const url = await ref.getDownloadURL();
+    msg.textContent = '✅ رفع اختبار ناجح. URL: ' + url;
+    msg.className = 'success';
+    dbg('testStorage URL:', url);
+  } catch(e){
+    dbg('testStorage error:', e);
+    msg.textContent = '❌ فشل رفع الاختبار: ' + e.message;
+    msg.className = 'error';
+  }
+}
+
+async function testDbWrite(){
+  const msg = document.getElementById('status');
+  try{
+    await db.ref('debug/test').set({ts: Date.now(), msg: 'hello'});
+    msg.textContent = '✅ كتابة DB ناجحة';
+    msg.className = 'success';
+    dbg('testDbWrite ok');
+  } catch(e){
+    dbg('testDbWrite error', e);
+    msg.textContent = '❌ فشل كتابة DB: ' + e.message;
+    msg.className = 'error';
+  }
 }
 </script>
-
 </body>
 </html>
