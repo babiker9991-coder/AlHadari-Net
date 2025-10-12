@@ -103,24 +103,23 @@ function addPost(){
   const category=document.getElementById('postCategory').value;
   const status=document.getElementById('status');
   status.textContent='';
+
   if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى";return;}
-  
+
   if(file){
     const storageRef = storage.ref('posts/'+Date.now()+'_'+file.name);
     storageRef.put(file).then(snapshot=>{
+      console.log("تم رفع الصورة إلى Storage");
       snapshot.ref.getDownloadURL().then(url=>{
-        db.ref(category).push({title,content,image:url,createdAt:Date.now(),likes:0});
-        document.getElementById('postTitle').value='';
-        document.getElementById('postContent').value='';
-        document.getElementById('postImage').value='';
-        status.textContent="✅ تم نشر الخبر مع الصورة";
-      });
-    });
+        db.ref(category).push({title,content,image:url,createdAt:Date.now(),likes:0})
+        .then(()=>status.textContent="✅ تم نشر الخبر مع الصورة")
+        .catch(err=>{console.error(err); status.textContent="❌ خطأ أثناء حفظ الخبر";});
+      }).catch(err=>{console.error(err); status.textContent="❌ خطأ أثناء جلب رابط الصورة";});
+    }).catch(err=>{console.error(err); status.textContent="❌ خطأ أثناء رفع الصورة";});
   } else {
-    db.ref(category).push({title,content,createdAt:Date.now(),likes:0});
-    document.getElementById('postTitle').value='';
-    document.getElementById('postContent').value='';
-    status.textContent="✅ تم نشر الخبر";
+    db.ref(category).push({title,content,createdAt:Date.now(),likes:0})
+    .then(()=>status.textContent="✅ تم نشر الخبر")
+    .catch(err=>{console.error(err); status.textContent="❌ خطأ أثناء حفظ الخبر";});
   }
 }
 
