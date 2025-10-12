@@ -1,93 +1,120 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحضري نت - لوحة التحكم</title>
-<style>
-body{font-family:"Cairo",sans-serif;background:#f2f5f8;margin:0;padding:0}
-header{background:#6a1b9a;color:#fff;padding:20px;text-align:center;font-size:28px;font-weight:bold}
-.container{max-width:600px;margin:20px auto;padding:15px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
-input,textarea,select,button{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;font-size:14px}
-button{background:#6a1b9a;color:#fff;border:none;cursor:pointer;font-weight:bold}
-button:hover{background:#4a148c}
-.post{border-bottom:1px solid #ddd;padding:15px 0}
-#status{margin-top:8px;font-weight:bold;color:green}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlHadari Net - موقع الحضري نت</title>
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #222;
+      color: #fff;
+      padding: 15px;
+      font-size: 24px;
+    }
+    nav {
+      background-color: #444;
+      padding: 10px;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 20px;
+    }
+    button {
+      background-color: #008CBA;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #006f99;
+    }
+    footer {
+      margin-top: 40px;
+      background-color: #222;
+      color: #ccc;
+      padding: 10px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
+  <header>🌐 AlHadari Net - الحضري نت</header>
+  <nav>
+    <a href="#" onclick="showSection('home')">الرئيسية</a>
+    <a href="#" onclick="showSection('courses')">الدورات</a>
+    <a href="#" onclick="showSection('about')">عن الموقع</a>
+  </nav>
 
-<header>الحضري نت - لوحة التحكم</header>
-<div class="container">
+  <main>
+    <h2>مرحبًا بك في موقع الحضري نت للدورات التعليمية</h2>
+    <p>منصة تعليمية تقدم محتوى مميز لتطوير مهاراتك التقنية والإدارية.</p>
+    <button id="testBtn">اختبار الاتصال بقاعدة البيانات</button>
+  </main>
 
-  <input type="text" id="postTitle" placeholder="عنوان المشاركة">
-  <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
-  <select id="postCategory">
-    <option value="news">أخبار</option>
-    <option value="articles">مقالات</option>
-  </select>
-  <button onclick="addPost()">نشر</button>
-  <p id="status"></p>
+  <footer>
+    &copy; 2025 AlHadari Net | جميع الحقوق محفوظة
+  </footer>
 
-  <h3>المشاركات الحالية</h3>
-  <div id="postsList">جارٍ التحميل...</div>
+  <!-- Firebase اتصال بقاعدة -->
+  <script type="module">
+    // استيراد مكتبات Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
-</div>
+    // إعدادات مشروعك
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
+      authDomain: "alhadari-net.firebaseapp.com",
+      projectId: "alhadari-net",
+      storageBucket: "alhadari-net.appspot.com",
+      messagingSenderId: "465757130283",
+      appId: "1:465757130283:web:2ee9d5a6ceaf63af5e246e",
+      measurementId: "G-DK4L0CDHY4"
+    };
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
+    // تهيئة Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-<script>
-// إعداد Firebase
-const firebaseConfig = {
-  apiKey: "ضع_apiKey_هنا",
-  authDomain: "ضع_authDomain_هنا",
-  databaseURL: "https://alhadari-net-default-rtdb.firebaseio.com",
-  projectId: "ضع_projectId_هنا",
-  storageBucket: "ضع_projectId_هنا.appspot.com",
-  messagingSenderId: "ضع_messagingSenderId_هنا",
-  appId: "ضع_appId_هنا"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+    // دالة اختبار الاتصال
+    async function testConnection() {
+      try {
+        await addDoc(collection(db, "test"), {
+          message: "تم الاتصال بنجاح!",
+          date: new Date().toISOString()
+        });
+        alert("✅ تم الاتصال بنجاح وحفظ البيانات في Firestore!");
+      } catch (error) {
+        console.error("❌ خطأ أثناء الاتصال:", error);
+        alert("❌ خطأ: " + error.message);
+      }
+    }
 
-// إضافة مشاركة
-function addPost(){
-  const title = document.getElementById('postTitle').value.trim();
-  const content = document.getElementById('postContent').value.trim();
-  const category = document.getElementById('postCategory').value;
-  const status = document.getElementById('status');
-  status.textContent='';
-  if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى"; return;}
-  db.ref(category).push({title, content, createdAt: Date.now()});
-  document.getElementById('postTitle').value='';
-  document.getElementById('postContent').value='';
-  status.textContent="✅ تم نشر المشاركة";
-}
+    // زر الاختبار
+    document.getElementById("testBtn").addEventListener("click", testConnection);
 
-// تحميل المشاركات
-function loadPosts(){
-  ['news','articles'].forEach(cat=>{
-    db.ref(cat).orderByChild('createdAt').on('value', snapshot=>{
-      const listEl = document.getElementById('postsList');
-      listEl.innerHTML = '';
-      const data = snapshot.val();
-      if(!data){listEl.innerHTML='<p>لا توجد مشاركات بعد.</p>'; return;}
-      Object.keys(data).sort((a,b)=>data[b].createdAt-data[a].createdAt).forEach(id=>{
-        const p = data[id];
-        const div = document.createElement('div');
-        div.className='post';
-        div.innerHTML=`<b>${cat.toUpperCase()}:</b> ${p.title} <br>${p.content}`;
-        listEl.appendChild(div);
-      });
-    });
-  });
-}
-
-window.onload = loadPosts;
-</script>
-
+    // لتفادي خطأ showSection
+    window.showSection = function (id) {
+      console.log("تم الضغط على القسم:", id);
+    };
+  </script>
 </body>
 </html>
-
