@@ -3,27 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحضري نت</title>
+<title>الحضري نت رياضة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
 <style>
-body{font-family:"Cairo",sans-serif;background:#f2f5f8;margin:0;padding:0}
-header{background:#6a1b9a;color:#fff;padding:20px;text-align:center;font-size:28px;font-weight:bold}
-nav{background:#4a148c;color:#fff;padding:10px;text-align:center}
-nav a{color:#fff;margin:0 10px;text-decoration:none;font-weight:bold}
+body{font-family:'Cairo',sans-serif;background:#f4f4f4;margin:0;padding:0}
+header{background:#1a1a1a;color:#fff;padding:15px;text-align:center;font-size:28px;font-weight:bold}
+nav{background:#333;color:#fff;padding:10px;text-align:center}
+nav a{color:#fff;margin:0 12px;text-decoration:none;font-weight:bold}
 nav a:hover{text-decoration:underline}
-.container{max-width:900px;margin:20px auto;padding:15px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
+.container{max-width:1000px;margin:20px auto;padding:15px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
 input,textarea,select,button{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;font-size:14px}
-button{background:#6a1b9a;color:#fff;border:none;cursor:pointer;font-weight:bold}
-button:hover{background:#4a148c}
-.post{border-bottom:1px solid #ddd;padding:15px 0}
+button{background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-weight:bold}
+button:hover{background:#6a1b9a}
+.post{border-bottom:1px solid #ddd;padding:15px 0;margin-bottom:15px;border-radius:6px;background:#fafafa}
+.post img{max-width:100%;border-radius:6px;margin-bottom:10px}
+.comment-box{margin-top:10px}
 .comment{background:#f0f0f0;margin:6px 0;padding:8px;border-radius:5px;font-size:14px}
-.comments-box{margin-top:10px}
 .admin-panel{background:#eef3ff;padding:10px;border-radius:10px;margin-bottom:20px}
 #status{margin-top:8px;font-weight:bold;color:green}
+.like-btn{background:#e74c3c;color:#fff;padding:5px 10px;border-radius:5px;margin-top:5px;cursor:pointer}
+.like-btn:hover{background:#c0392b}
 </style>
 </head>
 <body>
 
-<header>الحضري نت</header>
+<header>الحضري نت رياضة</header>
 <nav>
   <a href="#" onclick="showSection('news')">أخبار</a>
   <a href="#" onclick="showSection('articles')">مقالات</a>
@@ -34,20 +38,21 @@ button:hover{background:#4a148c}
   <!-- لوحة التحكم للمشرف -->
   <div class="admin-panel" id="adminPanel">
     <h3>لوحة تحكم المشرف</h3>
-    <input type="text" id="postTitle" placeholder="عنوان المشاركة">
-    <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
+    <input type="text" id="postTitle" placeholder="عنوان الخبر">
+    <textarea id="postContent" placeholder="محتوى الخبر"></textarea>
+    <input type="file" id="postImage">
     <select id="postCategory">
       <option value="news">أخبار</option>
       <option value="articles">مقالات</option>
     </select>
-    <button onclick="addPost()">نشر المشاركة</button>
+    <button onclick="addPost()">نشر الخبر</button>
     <p id="status"></p>
   </div>
 
   <!-- قسم الأخبار -->
   <div id="news" class="section">
     <h3>أخبار</h3>
-    <div id="newsList">جارٍ تحميل المشاركات...</div>
+    <div id="newsList">جارٍ تحميل الأخبار...</div>
   </div>
 
   <!-- قسم المقالات -->
@@ -61,6 +66,7 @@ button:hover{background:#4a148c}
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
 
 <script>
 // إعداد Firebase
@@ -75,6 +81,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const storage = firebase.storage();
 
 // كلمة مرور المشرف
 const adminPass = "221133";
@@ -88,18 +95,33 @@ window.addEventListener('load', ()=>{
   loadPosts();
 });
 
-// إضافة مشاركة
+// إضافة مشاركة مع صورة
 function addPost(){
   const title=document.getElementById('postTitle').value.trim();
   const content=document.getElementById('postContent').value.trim();
+  const file=document.getElementById('postImage').files[0];
   const category=document.getElementById('postCategory').value;
   const status=document.getElementById('status');
   status.textContent='';
   if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى";return;}
-  db.ref(category).push({title,content,createdAt:Date.now()});
-  document.getElementById('postTitle').value='';
-  document.getElementById('postContent').value='';
-  status.textContent="✅ تم نشر المشاركة";
+  
+  if(file){
+    const storageRef = storage.ref('posts/'+Date.now()+'_'+file.name);
+    storageRef.put(file).then(snapshot=>{
+      snapshot.ref.getDownloadURL().then(url=>{
+        db.ref(category).push({title,content,image:url,createdAt:Date.now(),likes:0});
+        document.getElementById('postTitle').value='';
+        document.getElementById('postContent').value='';
+        document.getElementById('postImage').value='';
+        status.textContent="✅ تم نشر الخبر مع الصورة";
+      });
+    });
+  } else {
+    db.ref(category).push({title,content,createdAt:Date.now(),likes:0});
+    document.getElementById('postTitle').value='';
+    document.getElementById('postContent').value='';
+    status.textContent="✅ تم نشر الخبر";
+  }
 }
 
 // تحميل المشاركات
@@ -109,15 +131,26 @@ function loadPosts(){
       const listEl=document.getElementById(section+'List');
       listEl.innerHTML='';
       const data=snapshot.val();
-      if(!data){listEl.innerHTML='<p>لا توجد مشاركات بعد.</p>'; return;}
+      if(!data){listEl.innerHTML='<p>لا توجد أخبار بعد.</p>'; return;}
       Object.keys(data).sort((a,b)=>data[b].createdAt-data[a].createdAt).forEach(id=>{
         const p=data[id];
         const div=document.createElement('div');
         div.className='post';
-        div.innerHTML=`<h4>${p.title}</h4><p>${p.content}</p>`;
+        let html=`<h4>${p.title}</h4><p>${p.content}</p>`;
+        if(p.image) html+=`<img src="${p.image}" alt="${p.title}">`;
+        html+=`<button class="like-btn" onclick="likePost('${section}','${id}')">❤️ ${p.likes||0}</button>`;
+        div.innerHTML=html;
         listEl.appendChild(div);
       });
     });
+  });
+}
+
+// الإعجاب بالمنشور
+function likePost(section,id){
+  const postRef = db.ref(section+'/'+id+'/likes');
+  postRef.transaction(current=>{
+    return (current||0)+1;
   });
 }
 
