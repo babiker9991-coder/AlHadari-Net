@@ -3,55 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحضري نت</title>
+<title>الحضري نت - لوحة التحكم</title>
 <style>
 body{font-family:"Cairo",sans-serif;background:#f2f5f8;margin:0;padding:0}
 header{background:#6a1b9a;color:#fff;padding:20px;text-align:center;font-size:28px;font-weight:bold}
-nav{background:#4a148c;color:#fff;padding:10px;text-align:center}
-nav a{color:#fff;margin:0 10px;text-decoration:none;font-weight:bold}
-nav a:hover{text-decoration:underline}
-.container{max-width:900px;margin:20px auto;padding:15px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
+.container{max-width:600px;margin:20px auto;padding:15px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
 input,textarea,select,button{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;font-size:14px}
 button{background:#6a1b9a;color:#fff;border:none;cursor:pointer;font-weight:bold}
 button:hover{background:#4a148c}
 .post{border-bottom:1px solid #ddd;padding:15px 0}
-.comment{background:#f0f0f0;margin:6px 0;padding:8px;border-radius:5px;font-size:14px}
-.comments-box{margin-top:10px}
-.admin-panel{background:#eef3ff;padding:10px;border-radius:10px;margin-bottom:20px}
 #status{margin-top:8px;font-weight:bold;color:green}
 </style>
 </head>
 <body>
 
-<header>الحضري نت</header>
-<nav>
-  <a href="#" onclick="showSection('news')">أخبار</a>
-  <a href="#" onclick="showSection('articles')">مقالات</a>
-</nav>
-
+<header>الحضري نت - لوحة التحكم</header>
 <div class="container">
 
-  <!-- لوحة التحكم -->
-  <div class="admin-panel" id="adminPanel">
-    <h3>لوحة تحكم المشرف</h3>
-    <input type="text" id="postTitle" placeholder="عنوان المشاركة">
-    <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
-    <select id="postCategory">
-      <option value="news">أخبار</option>
-      <option value="articles">مقالات</option>
-    </select>
-    <button onclick="addPost()">نشر المشاركة</button>
-    <p id="status"></p>
-  </div>
+  <input type="text" id="postTitle" placeholder="عنوان المشاركة">
+  <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
+  <select id="postCategory">
+    <option value="news">أخبار</option>
+    <option value="articles">مقالات</option>
+  </select>
+  <button onclick="addPost()">نشر</button>
+  <p id="status"></p>
 
-  <div id="news" class="section">
-    <h3>أخبار</h3>
-    <div id="newsList">جارٍ تحميل المشاركات...</div>
-  </div>
-  <div id="articles" class="section" style="display:none">
-    <h3>مقالات</h3>
-    <div id="articlesList">جارٍ تحميل المقالات...</div>
-  </div>
+  <h3>المشاركات الحالية</h3>
+  <div id="postsList">جارٍ التحميل...</div>
 
 </div>
 
@@ -73,27 +52,15 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// كلمة مرور المشرف
-const adminPass = "221133";
-window.addEventListener('load', ()=>{
-  const pass = prompt("أدخل كلمة مرور المشرف:");
-  if(pass===adminPass){
-    document.getElementById('adminPanel').style.display='block';
-  } else {
-    document.getElementById('adminPanel').style.display='none';
-  }
-  loadPosts();
-});
-
 // إضافة مشاركة
 function addPost(){
-  const title=document.getElementById('postTitle').value.trim();
-  const content=document.getElementById('postContent').value.trim();
-  const category=document.getElementById('postCategory').value;
-  const status=document.getElementById('status');
+  const title = document.getElementById('postTitle').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  const category = document.getElementById('postCategory').value;
+  const status = document.getElementById('status');
   status.textContent='';
-  if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى";return;}
-  db.ref(category).push({title,content,createdAt:Date.now()});
+  if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى"; return;}
+  db.ref(category).push({title, content, createdAt: Date.now()});
   document.getElementById('postTitle').value='';
   document.getElementById('postContent').value='';
   status.textContent="✅ تم نشر المشاركة";
@@ -101,30 +68,26 @@ function addPost(){
 
 // تحميل المشاركات
 function loadPosts(){
-  ['news','articles'].forEach(section=>{
-    db.ref(section).orderByChild('createdAt').on('value', snapshot=>{
-      const listEl=document.getElementById(section+'List');
-      listEl.innerHTML='';
-      const data=snapshot.val();
+  ['news','articles'].forEach(cat=>{
+    db.ref(cat).orderByChild('createdAt').on('value', snapshot=>{
+      const listEl = document.getElementById('postsList');
+      listEl.innerHTML = '';
+      const data = snapshot.val();
       if(!data){listEl.innerHTML='<p>لا توجد مشاركات بعد.</p>'; return;}
       Object.keys(data).sort((a,b)=>data[b].createdAt-data[a].createdAt).forEach(id=>{
-        const p=data[id];
-        const div=document.createElement('div');
+        const p = data[id];
+        const div = document.createElement('div');
         div.className='post';
-        div.innerHTML=`<h4>${p.title}</h4><p>${p.content}</p>`;
+        div.innerHTML=`<b>${cat.toUpperCase()}:</b> ${p.title} <br>${p.content}`;
         listEl.appendChild(div);
       });
     });
   });
 }
 
-// أقسام المنتدى
-function showSection(id){
-  ['news','articles'].forEach(s=>{
-    document.getElementById(s).style.display=s===id?'block':'none';
-  });
-}
+window.onload = loadPosts;
 </script>
 
 </body>
 </html>
+
