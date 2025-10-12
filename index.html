@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحضري نت - منصة المحتوى</title>
+<title>الحضري نت</title>
 <style>
 body{font-family:"Cairo",sans-serif;background:#f2f5f8;margin:0;padding:0}
 header{background:#6a1b9a;color:#fff;padding:20px;text-align:center;font-size:28px;font-weight:bold}
@@ -15,17 +15,10 @@ input,textarea,select,button{width:100%;padding:10px;margin:8px 0;border-radius:
 button{background:#6a1b9a;color:#fff;border:none;cursor:pointer;font-weight:bold}
 button:hover{background:#4a148c}
 .post{border-bottom:1px solid #ddd;padding:15px 0}
-.post img{max-width:100%;border-radius:6px;margin:5px 0}
 .comment{background:#f0f0f0;margin:6px 0;padding:8px;border-radius:5px;font-size:14px}
 .comments-box{margin-top:10px}
 .admin-panel{background:#eef3ff;padding:10px;border-radius:10px;margin-bottom:20px}
 #status{margin-top:8px;font-weight:bold;color:green}
-#chatBox{position:fixed;bottom:0;right:20px;width:300px;background:#fff;border:1px solid #ccc;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.2);display:none}
-#chatHeader{background:#6a1b9a;color:#fff;padding:10px;border-top-left-radius:10px;border-top-right-radius:10px;text-align:center;cursor:pointer}
-#chatMessages{height:200px;overflow-y:auto;padding:10px;border-top:1px solid #ddd;border-bottom:1px solid #ddd}
-#chatInput{display:flex}
-#chatInput input{flex:1;border:none;border-radius:0}
-#chatInput button{border-radius:0}
 </style>
 </head>
 <body>
@@ -34,8 +27,6 @@ button:hover{background:#4a148c}
 <nav>
   <a href="#" onclick="showSection('news')">أخبار</a>
   <a href="#" onclick="showSection('articles')">مقالات</a>
-  <a href="#" onclick="showSection('discussions')">نقاشات</a>
-  <a href="#" onclick="toggleChat()">💬 دردشة</a>
 </nav>
 
 <div class="container">
@@ -45,17 +36,14 @@ button:hover{background:#4a148c}
     <h3>لوحة تحكم المشرف</h3>
     <input type="text" id="postTitle" placeholder="عنوان المشاركة">
     <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
-    <input type="file" id="postImage">
     <select id="postCategory">
       <option value="news">أخبار</option>
       <option value="articles">مقالات</option>
-      <option value="discussions">نقاشات</option>
     </select>
     <button onclick="addPost()">نشر المشاركة</button>
     <p id="status"></p>
   </div>
 
-  <!-- الأقسام -->
   <div id="news" class="section">
     <h3>أخبار</h3>
     <div id="newsList">جارٍ تحميل المشاركات...</div>
@@ -64,30 +52,15 @@ button:hover{background:#4a148c}
     <h3>مقالات</h3>
     <div id="articlesList">جارٍ تحميل المقالات...</div>
   </div>
-  <div id="discussions" class="section" style="display:none">
-    <h3>نقاشات</h3>
-    <div id="discussionsList">جارٍ تحميل النقاشات...</div>
-  </div>
 
-</div>
-
-<!-- دردشة -->
-<div id="chatBox">
-  <div id="chatHeader" onclick="toggleChat()">الدردشة</div>
-  <div id="chatMessages"></div>
-  <div id="chatInput">
-    <input type="text" id="chatText" placeholder="اكتب رسالة...">
-    <button onclick="sendMessage()">إرسال</button>
-  </div>
 </div>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
 
 <script>
-// ===== Firebase Config =====
+// إعداد Firebase
 const firebaseConfig = {
   apiKey: "ضع_apiKey_هنا",
   authDomain: "ضع_authDomain_هنا",
@@ -99,11 +72,10 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-const storage = firebase.storage();
 
-// كلمة المرور للمشرف
+// كلمة مرور المشرف
 const adminPass = "221133";
-window.addEventListener('load',()=>{
+window.addEventListener('load', ()=>{
   const pass = prompt("أدخل كلمة مرور المشرف:");
   if(pass===adminPass){
     document.getElementById('adminPanel').style.display='block';
@@ -113,40 +85,24 @@ window.addEventListener('load',()=>{
   loadPosts();
 });
 
-// إضافة مشاركة مع صورة
+// إضافة مشاركة
 function addPost(){
   const title=document.getElementById('postTitle').value.trim();
   const content=document.getElementById('postContent').value.trim();
   const category=document.getElementById('postCategory').value;
-  const imageFile=document.getElementById('postImage').files[0];
   const status=document.getElementById('status');
   status.textContent='';
-  if(!title || !content){status.textContent="املأ العنوان والمحتوى";return;}
-  
-  if(imageFile){
-    const storageRef = storage.ref('posts/'+Date.now()+'-'+imageFile.name);
-    storageRef.put(imageFile).then(snapshot=>{
-      snapshot.ref.getDownloadURL().then(url=>{
-        savePostToDB(title,content,category,url);
-      });
-    });
-  } else {
-    savePostToDB(title,content,category,null);
-  }
-}
-
-function savePostToDB(title,content,category,imageUrl){
-  db.ref(category).push({title,content,image:imageUrl||'',createdAt:Date.now()});
+  if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى";return;}
+  db.ref(category).push({title,content,createdAt:Date.now()});
   document.getElementById('postTitle').value='';
   document.getElementById('postContent').value='';
-  document.getElementById('postImage').value='';
-  document.getElementById('status').textContent="✅ تم نشر المشاركة";
+  status.textContent="✅ تم نشر المشاركة";
 }
 
-// تحميل المشاركات والتعليقات
+// تحميل المشاركات
 function loadPosts(){
-  ['news','articles','discussions'].forEach(section=>{
-    db.ref(section).orderByChild('createdAt').on('value',snapshot=>{
+  ['news','articles'].forEach(section=>{
+    db.ref(section).orderByChild('createdAt').on('value', snapshot=>{
       const listEl=document.getElementById(section+'List');
       listEl.innerHTML='';
       const data=snapshot.val();
@@ -155,72 +111,19 @@ function loadPosts(){
         const p=data[id];
         const div=document.createElement('div');
         div.className='post';
-        div.innerHTML=`<h4>${p.title}</h4>
-          ${p.image?'<img src="'+p.image+'">':''}
-          <p>${p.content}</p>
-          <div class="comments-box">
-            <input id="comment-${section}-${id}" placeholder="أضف تعليقك...">
-            <button onclick="addComment('${section}','${id}')">إرسال</button>
-            <div id="commentsList-${section}-${id}"></div>
-          </div>`;
+        div.innerHTML=`<h4>${p.title}</h4><p>${p.content}</p>`;
         listEl.appendChild(div);
-
-        // عرض التعليقات
-        db.ref(`${section}/${id}/comments`).on('value',snap=>{
-          const list=document.getElementById(`commentsList-${section}-${id}`);
-          list.innerHTML='';
-          snap.forEach(c=>{
-            const cm=c.val();
-            const divC=document.createElement('div');
-            divC.className='comment';
-            divC.textContent=`${cm.user||'زائر'}: ${cm.text}`;
-            list.appendChild(divC);
-          });
-        });
       });
     });
   });
 }
 
-// إضافة تعليق للزوار
-function addComment(section,id){
-  const input=document.getElementById(`comment-${section}-${id}`);
-  const text=input.value.trim();
-  if(!text) return;
-  db.ref(`${section}/${id}/comments`).push({user:'زائر',text});
-  input.value='';
-}
-
-// عرض الأقسام
+// أقسام المنتدى
 function showSection(id){
-  ['news','articles','discussions'].forEach(s=>{
+  ['news','articles'].forEach(s=>{
     document.getElementById(s).style.display=s===id?'block':'none';
   });
 }
-
-// دردشة
-function toggleChat(){
-  const chat=document.getElementById('chatBox');
-  chat.style.display=chat.style.display==='none'?'block':'none';
-}
-function sendMessage(){
-  const msg=document.getElementById('chatText').value.trim();
-  if(!msg) return;
-  db.ref('chat').push({user:'زائر',text:msg});
-  document.getElementById('chatText').value='';
-}
-// تحميل الدردشة
-db.ref('chat').on('value',snapshot=>{
-  const chatDiv=document.getElementById('chatMessages');
-  chatDiv.innerHTML='';
-  snapshot.forEach(c=>{
-    const cm=c.val();
-    const divC=document.createElement('div');
-    divC.textContent=`${cm.user||'زائر'}: ${cm.text}`;
-    chatDiv.appendChild(divC);
-    chatDiv.scrollTop=chatDiv.scrollHeight;
-  });
-});
 </script>
 
 </body>
