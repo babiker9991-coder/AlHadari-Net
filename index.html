@@ -1,188 +1,171 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحضري نت - المنتدى الرياضي</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
-<style>
-body{font-family:'Cairo',sans-serif;background:#f4f4f4;margin:0;padding:0}
-header{background:#1a1a1a;color:#fff;padding:15px;text-align:center;font-size:28px;font-weight:bold}
-nav{background:#333;color:#fff;padding:10px;text-align:center}
-nav a{color:#fff;margin:0 12px;text-decoration:none;font-weight:bold}
-nav a:hover{text-decoration:underline}
-.container{max-width:1000px;margin:20px auto;padding:15px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.15)}
-input,textarea,select,button{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;font-size:14px}
-button{background:#1a1a1a;color:#fff;border:none;cursor:pointer;font-weight:bold}
-button:hover{background:#6a1b9a}
-.post{border-bottom:1px solid #ddd;padding:15px 0;margin-bottom:15px;border-radius:6px;background:#fafafa}
-.post img{max-width:100%;border-radius:6px;margin-bottom:10px}
-.comment-box{margin-top:10px}
-.comment{background:#f0f0f0;margin:6px 0;padding:8px;border-radius:5px;font-size:14px}
-.admin-panel{background:#eef3ff;padding:10px;border-radius:10px;margin-bottom:20px}
-#status{margin-top:8px;font-weight:bold;color:green}
-.like-btn{background:#e74c3c;color:#fff;padding:5px 10px;border-radius:5px;margin-top:5px;cursor:pointer}
-.like-btn:hover{background:#c0392b}
-.comment-btn{background:#3498db;color:#fff;padding:5px 10px;border-radius:5px;margin-top:5px;cursor:pointer}
-.comment-btn:hover{background:#2980b9}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>الحضري نت — نسخة رياضية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<header>الحضري نت - المنتدى الرياضي</header>
-<nav>
-  <a href="#" onclick="showSection('news')">أخبار</a>
-  <a href="#" onclick="showSection('articles')">مقالات</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo" onclick="showSection('home')">الحضري نت</div>
+    <div class="searchbar">
+      <input id="searchInput" placeholder="ابحث عن فريق، خبر، مباراة..." />
+      <button class="btn" onclick="doSearch()">بحث</button>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="openAdminPanel()">لوحة المشرف</button>
+      <button class="btn ghost" onclick="openNewPostModal()">+ نشر</button>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" onclick="showSection('home')">الرئيسية</a>
+    <a href="#" onclick="showSection('news')">أخبار</a>
+    <a href="#" onclick="showSection('matches')">مباريات</a>
+    <a href="#" onclick="showSection('standings')">ترتيب</a>
+    <a href="#" onclick="showSection('teams')">الفرق</a>
+    <a href="#" onclick="showSection('forum')">المنتدى</a>
+  </div>
 </nav>
 
+<!-- container -->
 <div class="container">
 
-  <!-- لوحة تحكم المشرف -->
-  <div class="admin-panel" id="adminPanel">
-    <h3>لوحة تحكم المشرف</h3>
-    <input type="text" id="postTitle" placeholder="عنوان المشاركة">
-    <textarea id="postContent" placeholder="محتوى المشاركة"></textarea>
-    <input type="file" id="postImage">
-    <select id="postCategory">
-      <option value="news">أخبار</option>
-      <option value="articles">مقالات</option>
-    </select>
-    <button onclick="addPost()">نشر المشاركة</button>
-    <p id="status"></p>
-  </div>
+  <main class="main-feed">
 
-  <!-- الأخبار -->
-  <div id="news" class="section">
-    <h3>أخبار</h3>
-    <div id="newsList">جارٍ تحميل الأخبار...</div>
-  </div>
+    <!-- ticker -->
+    <div class="ticker widget" id="liveTicker"><div class="live-title">مباشر:</div></div>
 
-  <!-- المقالات -->
-  <div id="articles" class="section" style="display:none">
-    <h3>مقالات</h3>
-    <div id="articlesList">جارٍ تحميل المقالات...</div>
-  </div>
+    <!-- hero -->
+    <section id="homeSection">
+      <div class="hero card" id="heroCard">
+        <div class="hero-text">
+          <h2 id="heroTitle">أحدث الأخبار</h2>
+          <p id="heroExcerpt">تابع آخر الأخبار الرياضية — اضغط على الخبر لعرض التفاصيل.</p>
+          <div class="controls"><button class="btn" onclick="openLatest()">اقرأ الآن</button><button class="btn ghost" onclick="refreshAll()">تحديث</button></div>
+        </div>
+        <img id="heroImage" src="https://via.placeholder.com/420x260?text=Sport" alt="hero">
+      </div>
+
+      <div id="newsGrid" class="grid-news"></div>
+    </section>
+
+    <!-- news list -->
+    <section id="newsSection" style="display:none">
+      <div class="card">
+        <h3>جميع الأخبار</h3>
+        <div id="newsListAll"></div>
+      </div>
+    </section>
+
+    <!-- matches -->
+    <section id="matchesSection" style="display:none">
+      <div class="card">
+        <h3>مباريات اليوم</h3>
+        <div id="matchesList"></div>
+      </div>
+    </section>
+
+    <!-- standings -->
+    <section id="standingsSection" style="display:none">
+      <div class="card">
+        <h3>ترتيب الفرق</h3>
+        <div id="standingsList"></div>
+      </div>
+    </section>
+
+    <!-- teams -->
+    <section id="teamsSection" style="display:none">
+      <div class="card">
+        <h3>الفرق</h3>
+        <div id="teamsList"></div>
+      </div>
+    </section>
+
+    <!-- forum -->
+    <section id="forumSection" style="display:none">
+      <div class="card">
+        <h3>المنتدى</h3>
+        <div id="forumList"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <aside class="sidebar">
+    <div class="widget">
+      <h4>أخبار عاجلة</h4>
+      <ul id="hotList" class="hot-list"></ul>
+    </div>
+
+    <div class="widget admin-panel" id="adminBox" style="display:none;">
+      <h4>لوحة المشرف</h4>
+      <input id="adminEmail" placeholder="بريد المشرف (اختياري للـ Auth)">
+      <input id="adminPass" placeholder="كلمة المرور (لوحة سريعة)">
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="adminLogin()">دخول</button>
+        <button class="btn ghost" onclick="adminLogout()">خروج</button>
+      </div>
+      <p class="small">للدخول السريع أدخل كلمة المرور: <b>221133</b> (يمكن تغييرها في app.js)</p>
+    </div>
+
+    <div class="widget">
+      <h4>مساحة إعلان</h4>
+      <div class="ad-box">إعلان</div>
+    </div>
+
+    <div class="widget">
+      <h4>تواصل</h4>
+      <p class="small">📧 babiker9991@gmail.com<br/>📞 +249900599203</p>
+    </div>
+  </aside>
 
 </div>
 
-<!-- Firebase -->
+<!-- post detail modal -->
+<div class="modal" id="postModal">
+  <div class="sheet">
+    <button class="close-btn" onclick="closePostModal()">✖</button>
+    <div id="postFull"></div>
+    <div id="postComments" class="comments"></div>
+    <div class="comment-form">
+      <input id="commentName" placeholder="اسمك (اختياري)">
+      <textarea id="commentText" placeholder="اكتب تعليقك..."></textarea>
+      <button class="btn" onclick="submitComment()">إرسال تعليق</button>
+    </div>
+  </div>
+</div>
+
+<!-- new post modal -->
+<div class="modal" id="newPostModal">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeNewPostModal()">✖</button>
+    <h3>نشر خبر/مقال</h3>
+    <div class="admin-panel">
+      <input id="npTitle" placeholder="العنوان">
+      <input id="npExcerpt" placeholder="مقتطف قصير">
+      <textarea id="npContent" placeholder="نص الخبر"></textarea>
+      <input type="file" id="npImage">
+      <select id="npCat"><option value="news">أخبار</option><option value="articles">مقالات</option></select>
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="publishPost()">نشر</button>
+        <button class="btn ghost" onclick="closeNewPostModal()">إلغاء</button>
+      </div>
+      <p id="npStatus" class="small"></p>
+    </div>
+  </div>
+</div>
+
+<!-- scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
-
-<script>
-// إعداد Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
-  authDomain: "alhadari-net.firebaseapp.com",
-  databaseURL: "https://alhadari-net-default-rtdb.firebaseio.com",
-  projectId: "alhadari-net",
-  storageBucket: "alhadari-net.appspot.com",
-  messagingSenderId: "465757130283",
-  appId: "1:465757130283:web:10128c19bef6171e5e246e"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const storage = firebase.storage();
-
-// كلمة مرور المشرف
-const adminPass = "221133";
-window.addEventListener('load', ()=>{
-  const pass = prompt("أدخل كلمة مرور المشرف:");
-  if(pass===adminPass){
-    document.getElementById('adminPanel').style.display='block';
-  } else {
-    document.getElementById('adminPanel').style.display='none';
-  }
-  loadPosts();
-});
-
-// إضافة مشاركة مع صورة
-function addPost(){
-  const title=document.getElementById('postTitle').value.trim();
-  const content=document.getElementById('postContent').value.trim();
-  const file=document.getElementById('postImage').files[0];
-  const category=document.getElementById('postCategory').value;
-  const status=document.getElementById('status');
-  status.textContent='';
-
-  if(!title || !content){status.textContent="الرجاء تعبئة العنوان والمحتوى";return;}
-
-  if(file){
-    const storageRef = storage.ref('posts/'+Date.now()+'_'+file.name);
-    storageRef.put(file).then(snapshot=>{
-      snapshot.ref.getDownloadURL().then(url=>{
-        db.ref(category).push({title,content,image:url,createdAt:Date.now(),likes:0,comments:{}})
-        .then(()=>status.textContent="✅ تم نشر المشاركة مع الصورة")
-        .catch(err=>{console.error(err); status.textContent="❌ خطأ أثناء حفظ المشاركة";});
-      });
-    });
-  } else {
-    db.ref(category).push({title,content,createdAt:Date.now(),likes:0,comments:{}})
-    .then(()=>status.textContent="✅ تم نشر المشاركة")
-    .catch(err=>{console.error(err); status.textContent="❌ خطأ أثناء حفظ المشاركة";});
-  }
-}
-
-// تحميل المشاركات
-function loadPosts(){
-  ['news','articles'].forEach(section=>{
-    db.ref(section).orderByChild('createdAt').on('value', snapshot=>{
-      const listEl=document.getElementById(section+'List');
-      listEl.innerHTML='';
-      const data=snapshot.val();
-      if(!data){listEl.innerHTML='<p>لا توجد مشاركات بعد.</p>'; return;}
-      Object.keys(data).sort((a,b)=>data[b].createdAt-data[a].createdAt).forEach(id=>{
-        const p=data[id];
-        const div=document.createElement('div');
-        div.className='post';
-        let html=`<h4>${p.title}</h4><p>${p.content}</p>`;
-        if(p.image) html+=`<img src="${p.image}" alt="${p.title}">`;
-        html+=`<button class="like-btn" onclick="likePost('${section}','${id}')">❤️ ${p.likes||0}</button>`;
-        html+=`<div class="comment-box" id="comments-${section}-${id}"></div>`;
-        html+=`<input type="text" placeholder="اكتب تعليق..." id="commentInput-${section}-${id}">
-               <button class="comment-btn" onclick="addComment('${section}','${id}')">تعليق</button>`;
-        div.innerHTML=html;
-        listEl.appendChild(div);
-
-        // تحميل التعليقات
-        const commentsBox = document.getElementById(`comments-${section}-${id}`);
-        if(p.comments){
-          Object.keys(p.comments).forEach(cid=>{
-            const c = p.comments[cid];
-            const cdiv = document.createElement('div');
-            cdiv.className='comment';
-            cdiv.textContent=c.text;
-            commentsBox.appendChild(cdiv);
-          });
-        }
-      });
-    });
-  });
-}
-
-// الإعجاب
-function likePost(section,id){
-  const postRef = db.ref(section+'/'+id+'/likes');
-  postRef.transaction(current=> (current||0)+1 );
-}
-
-// إضافة تعليق
-function addComment(section,id){
-  const input = document.getElementById(`commentInput-${section}-${id}`);
-  const text = input.value.trim();
-  if(!text) return;
-  db.ref(`${section}/${id}/comments`).push({text});
-  input.value='';
-}
-
-// أقسام المنتدى
-function showSection(id){
-  ['news','articles'].forEach(s=>{
-    document.getElementById(s).style.display=s===id?'block':'none';
-  });
-}
-</script>
-
+<script src="app.js"></script>
 </body>
 </html>
