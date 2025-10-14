@@ -1,41 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>عشقي الأسمر</title>
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="scripts.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>💞 عشقي الأسمر 💞</h1>
+  <header class="site-header">
+    <h1>عشقي <span class="gold">الأسمر</span></h1>
     <nav>
-      <a href="#home">الرئيسية</a>
-      <a href="#stories">الروايات</a>
-      <a href="#gallery">الصور</a>
-      <a href="#about">عن الموقع</a>
+      <a href="admin.html">لوحة التحكم</a>
     </nav>
   </header>
 
-  <section id="home" class="hero">
-    <div class="overlay">
-      <h2>حيث تنبض الحروف عشقًا 💖</h2>
-    </div>
-  </section>
+  <main>
+    <section class="hero">
+      <h2>حيث تنبض الحروف عشقًا</h2>
+      <p>روايات وخواطر وصور رومانسية.</p>
+    </section>
 
-  <section id="stories" class="section">
-    <h2>📚 أحدث الروايات</h2>
-    <div id="storiesContainer" class="grid"></div>
-  </section>
+    <section id="stories" class="container">
+      <h3>أحدث الروايات</h3>
+      <div id="storiesContainer" class="grid"></div>
+    </section>
 
-  <section id="about" class="section about">
-    <h2>عن عشقي الأسمر</h2>
-    <p>موقع أدبي رومانسي يجمع بين الحروف والقلوب العاشقة 💌.</p>
-  </section>
+    <section id="gallery" class="container">
+      <h3>معرض الصور</h3>
+      <div id="galleryContainer" class="gallery-grid"></div>
+    </section>
+  </main>
 
-  <footer>
-    <p>© 2025 عشقي الأسمر | جميع الحقوق محفوظة</p>
-  </footer>
+  <footer class="site-footer">© <span id="year"></span> عشقي الأسمر</footer>
 </body>
 </html>
