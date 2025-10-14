@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم عشقي الأسمر</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="admin.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>لوحة التحكم 💕</h1>
+  </header>
+
+  <section id="loginSection" class="section">
+    <h2>تسجيل الدخول</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="password" placeholder="كلمة المرور" required>
+      <button type="submit">دخول</button>
+    </form>
+  </section>
+
+  <section id="adminSection" class="section" style="display:none;">
+    <h2>إضافة رواية جديدة</h2>
+    <form id="storyForm">
+      <input type="text" id="storyTitle" placeholder="عنوان الرواية" required>
+      <textarea id="storyContent" placeholder="نص الرواية" required></textarea>
+      <input type="file" id="storyImage" accept="image/*">
+      <button type="submit">إضافة الرواية</button>
+    </form>
+
+    <h2>📖 الروايات الحالية</h2>
+    <ul id="storyList"></ul>
+  </section>
+</body>
+</html>
