@@ -1,48 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>لوحة تحكم — عشقي الأسمر</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم عشقي الأسمر</title>
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="admin.js" defer></script>
 </head>
-<body class="admin-page">
-  <header class="site-header">
-    <h1>لوحة التحكم — عشقي الأسمر</h1>
-    <nav><a href="index.html">عرض الموقع</a></nav>
+<body>
+  <header>
+    <h1>💞 لوحة تحكم عشقي الأسمر 💞</h1>
   </header>
 
-  <main class="container">
-    <!-- login -->
-    <section id="loginSection" class="card">
-      <h3>تسجيل دخول</h3>
-      <form id="loginForm">
-        <input id="email" type="email" placeholder="البريد الإلكتروني" required>
-        <input id="password" type="password" placeholder="كلمة المرور" required>
-        <button type="submit">دخول</button>
-      </form>
-      <div id="loginError" class="error" style="display:none"></div>
-    </section>
+  <section id="loginSection" class="section">
+    <h2>تسجيل الدخول</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="password" placeholder="كلمة المرور" required>
+      <button type="submit">دخول</button>
+    </form>
+  </section>
 
-    <!-- admin -->
-    <section id="adminSection" class="card" style="display:none">
-      <h3>إضافة / نشر رواية</h3>
-      <form id="storyForm">
-        <input id="storyTitle" type="text" placeholder="عنوان الرواية" required>
-        <textarea id="storyContent" rows="6" placeholder="نص الرواية..." required></textarea>
-        <label class="file-label">صورة الغلاف
-          <input id="storyImage" type="file" accept="image/*">
-        </label>
-        <div style="display:flex;gap:.5rem;justify-content:center">
-          <button type="submit">نشر</button>
-          <button id="signOutBtn" type="button">خروج</button>
-        </div>
-      </form>
+  <section id="adminSection" class="section" style="display:none;">
+    <h2>إضافة رواية جديدة</h2>
+    <form id="storyForm">
+      <input type="text" id="storyTitle" placeholder="عنوان الرواية" required>
+      <textarea id="storyContent" placeholder="نص الرواية" required></textarea>
+      <input type="file" id="storyImage" accept="image/*" required>
+      <button type="submit">إضافة الرواية</button>
+    </form>
 
-      <h4>قائمة الروايات</h4>
-      <div id="storyList" class="list"></div>
-    </section>
-  </main>
+    <h2>📖 الروايات الحالية</h2>
+    <ul id="storyList"></ul>
+
+    <button id="logoutBtn">🚪 تسجيل الخروج</button>
+  </section>
 </body>
 </html>
