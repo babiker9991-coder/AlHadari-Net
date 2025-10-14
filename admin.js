@@ -1,130 +1,115 @@
-// admin.js (module)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
-import { firebaseConfig } from "./firebaseConfig.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyDxoEJLaGcEy7s1P2nE2_bDniS71ldI31Q",
+  authDomain: "alhadari-net.firebaseapp.com",
+  databaseURL: "https://alhadari-net-default-rtdb.firebaseio.com",
+  projectId: "alhadari-net",
+  storageBucket: "alhadari-net.firebasestorage.app",
+  messagingSenderId: "465757130283",
+  appId: "1:465757130283:web:10128c19bef6171e5e246e",
+  measurementId: "G-XLQB1M9FHQ"
+};
+
+// 🔹 تهيئة Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 const storage = getStorage(app);
+const analytics = getAnalytics(app); // ✅ تفعيل Analytics لتتبع الزيارات
 
-// DOM
-const loginSection = document.getElementById('loginSection');
-const adminSection = document.getElementById('adminSection');
-const loginForm = document.getElementById('loginForm');
-const loginError = document.getElementById('loginError');
-const storyForm = document.getElementById('storyForm');
-const storyList = document.getElementById('storyList');
-const signOutBtn = document.getElementById('signOutBtn');
+// 🔹 عناصر الصفحة
+const loginSection = document.getElementById("loginSection");
+const adminSection = document.getElementById("adminSection");
+const loginForm = document.getElementById("loginForm");
+const storyForm = document.getElementById("storyForm");
+const storyList = document.getElementById("storyList");
+const logoutBtn = document.getElementById("logoutBtn");
 
-// Login submit
-loginForm.addEventListener('submit', async (e) => {
+// تسجيل الدخول
+loginForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  loginError.style.display = 'none';
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    // onAuthStateChanged will handle UI
-  } catch (err) {
-    loginError.style.display = 'block';
-    loginError.textContent = 'خطأ في تسجيل الدخول: ' + (err.message || err);
-  }
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("تم تسجيل الدخول بنجاح 💕");
+      loginSection.style.display = "none";
+      adminSection.style.display = "block";
+    })
+    .catch((error) => {
+      alert("❌ خطأ في تسجيل الدخول: " + error.message);
+    });
 });
 
-// Sign out
-signOutBtn.addEventListener('click', async () => {
-  await signOut(auth);
-});
-
-// Auth state observer
-onAuthStateChanged(auth, user => {
+// متابعة حالة المستخدم
+onAuthStateChanged(auth, (user) => {
   if (user) {
-    loginSection.style.display = 'none';
-    adminSection.style.display = 'block';
-    loadStoriesList();
+    loginSection.style.display = "none";
+    adminSection.style.display = "block";
   } else {
-    loginSection.style.display = 'block';
-    adminSection.style.display = 'none';
-    storyList.innerHTML = '';
+    adminSection.style.display = "none";
+    loginSection.style.display = "block";
   }
 });
 
-// Add story (with image upload)
-storyForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const title = document.getElementById('storyTitle').value.trim();
-  const content = document.getElementById('storyContent').value.trim();
-  const fileInp = document.getElementById('storyImage');
-  if (!title || !content) { alert('الرجاء ملء العنوان والنص'); return; }
+// تسجيل الخروج
+logoutBtn.addEventListener("click", () => {
+  signOut(auth);
+  alert("تم تسجيل الخروج ❤️");
+});
 
-  let imageURL = '';
-  if (fileInp.files && fileInp.files[0]) {
-    const file = fileInp.files[0];
-    // unique filename to avoid overwriting
-    const name = Date.now() + '_' + file.name.replace(/\s+/g,'_');
-    const storageReference = sRef(storage, 'stories/' + name);
-    try {
-      await uploadBytes(storageReference, file);
-      imageURL = await getDownloadURL(storageReference);
-    } catch (err) {
-      alert('فشل رفع الصورة: ' + (err.message || err));
-      return;
-    }
+// إضافة رواية جديدة
+storyForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const title = document.getElementById("storyTitle").value;
+  const content = document.getElementById("storyContent").value;
+  const file = document.getElementById("storyImage").files[0];
+
+  if (!file) {
+    alert("يرجى اختيار صورة 📸");
+    return;
   }
 
-  const newStory = {
+  const storageRef = sRef(storage, 'stories/' + file.name);
+  await uploadBytes(storageRef, file);
+  const downloadURL = await getDownloadURL(storageRef);
+
+  push(ref(db, "stories"), {
     title,
     content,
-    imageURL,
-    created: Date.now()
-  };
+    imageURL: downloadURL,
+    createdAt: Date.now()
+  });
 
-  try {
-    await push(ref(db, 'stories'), newStory);
-    alert('تم نشر الرواية بنجاح 💖');
-    storyForm.reset();
-  } catch (err) {
-    alert('خطأ عند حفظ الرواية: ' + (err.message || err));
-  }
+  alert("تمت إضافة الرواية بنجاح 🌹");
+  storyForm.reset();
 });
 
-// Load list and allow delete
-function loadStoriesList(){
-  onValue(ref(db, 'stories'), snapshot => {
-    storyList.innerHTML = '';
-    const data = snapshot.val();
-    if (!data) { storyList.innerHTML = '<p>لا توجد روايات</p>'; return; }
-    const keys = Object.keys(data).sort((a,b)=> data[b].created - data[a].created);
-    keys.forEach(key => {
-      const s = data[key];
-      const row = document.createElement('div');
-      row.className = 'story-row';
-      row.innerHTML = `
-        <div class="story-thumb" style="background-image:url('${s.imageURL || ''}')"></div>
-        <div style="flex:1">
-          <div><strong>${escapeHtml(s.title)}</strong></div>
-          <div style="font-size:12px;color:#666">${new Date(s.created).toLocaleString()}</div>
-        </div>
-        <div>
-          <button data-id="${key}" class="btn-del">حذف</button>
-        </div>
-      `;
-      const btn = row.querySelector('.btn-del');
-      btn.addEventListener('click', async ()=> {
-        if (!confirm('هل تريد حذف هذه الرواية؟')) return;
-        try {
-          await remove(ref(db, 'stories/' + key));
-          // Note: image file remains in Storage; you may implement deletion if needed.
-        } catch(err) {
-          alert('خطأ عند الحذف: ' + (err.message || err));
-        }
-      });
-      storyList.appendChild(row);
+// عرض الروايات في لوحة التحكم
+onValue(ref(db, "stories"), (snapshot) => {
+  storyList.innerHTML = "";
+  snapshot.forEach((child) => {
+    const key = child.key;
+    const story = child.val();
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${story.title}</strong>
+      <button data-id="${key}" class="deleteBtn">🗑 حذف</button>`;
+    storyList.appendChild(li);
+  });
+
+  // حذف الروايات
+  document.querySelectorAll(".deleteBtn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const key = e.target.getAttribute("data-id");
+      remove(ref(db, "stories/" + key));
+      alert("تم حذف الرواية ❌");
     });
   });
-}
-
-function escapeHtml(str){ return String(str||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+});
