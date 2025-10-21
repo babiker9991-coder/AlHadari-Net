@@ -6,7 +6,15 @@
 }
 
 body {
-  background-color: #f8f9fa;
+  /* تدرجات اللون الأخضر الفاتح */
+  background: linear-gradient(
+    to bottom,
+    #e6f9e6, /* أخضر فاتح جداً */
+    #ccf2cc,
+    #b3ecb3,
+    #99e699,
+    #80e080  /* أخضر فاتح داكن قليلاً */
+  );
   color: #222;
   scroll-behavior: smooth;
   line-height: 1.6;
@@ -18,8 +26,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 18px 60px;
-  background: #000;
-  color: #fff;
+  background: #000; /* أسود */
+  color: #fff;      /* خط أبيض */
   position: fixed;
   width: 100%;
   top: 0;
@@ -53,7 +61,7 @@ body {
 /* ====== قسم البداية ====== */
 .hero {
   height: 100vh;
-  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+  background: transparent; /* نترك الخلفية التدرجية من البودي */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,7 +79,7 @@ body {
 
 .hero p {
   font-size: 18px;
-  color: #555;
+  color: #333;
   max-width: 650px;
   margin-bottom: 35px;
 }
@@ -95,6 +103,7 @@ body {
 section {
   padding: 90px 20px;
   text-align: center;
+  background: transparent; /* نترك التدرجية تظهر في كل الأقسام */
 }
 
 h2 {
@@ -118,7 +127,7 @@ h2::after {
 .about p {
   max-width: 750px;
   margin: 0 auto;
-  color: #555;
+  color: #333;
   font-size: 17px;
 }
 
@@ -132,7 +141,7 @@ h2::after {
 
 .service {
   background: #fff;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ddd;
   padding: 25px 35px;
   border-radius: 14px;
   width: 260px;
