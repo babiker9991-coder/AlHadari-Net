@@ -1,0 +1,215 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Cairo", "Segoe UI", sans-serif;
+}
+
+body {
+  background-color: #f8f9fa;
+  color: #222;
+  scroll-behavior: smooth;
+  line-height: 1.6;
+}
+
+/* ====== الهيدر ====== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 60px;
+  background: #000;
+  color: #fff;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+.logo span {
+  color: #0078d7; /* لون أزرق مايكروسوفت */
+}
+
+.nav a {
+  color: #f0f0f0;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: #0078d7;
+}
+
+/* ====== قسم البداية ====== */
+.hero {
+  height: 100vh;
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.hero h1 {
+  font-size: 46px;
+  margin-bottom: 15px;
+  color: #111;
+  font-weight: 800;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #555;
+  max-width: 650px;
+  margin-bottom: 35px;
+}
+
+.btn {
+  padding: 12px 30px;
+  background: #0078d7;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background: #005ea8;
+  transform: translateY(-2px);
+}
+
+/* ====== الأقسام ====== */
+section {
+  padding: 90px 20px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 35px;
+  font-size: 30px;
+  color: #111;
+  position: relative;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 3px;
+  background: #0078d7;
+  margin: 10px auto 0;
+  border-radius: 3px;
+}
+
+/* ====== من نحن ====== */
+.about p {
+  max-width: 750px;
+  margin: 0 auto;
+  color: #555;
+  font-size: 17px;
+}
+
+/* ====== الخدمات ====== */
+.service-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.service {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 25px 35px;
+  border-radius: 14px;
+  width: 260px;
+  color: #333;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.service:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* ====== المشاريع ====== */
+.project-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.project-gallery img {
+  width: 100%;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+
+.project-gallery img:hover {
+  transform: scale(1.04);
+}
+
+/* ====== التواصل ====== */
+.contact form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: auto;
+}
+
+.contact input,
+.contact textarea {
+  background: #fff;
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 14px;
+  border-radius: 8px;
+  color: #000;
+  transition: border-color 0.3s;
+}
+
+.contact input:focus,
+.contact textarea:focus {
+  border-color: #0078d7;
+  outline: none;
+}
+
+.contact button {
+  background: #0078d7;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.contact button:hover {
+  background: #005ea8;
+}
+
+/* ====== التذييل ====== */
+.footer {
+  text-align: center;
+  padding: 25px;
+  background: #000;
+  color: #fff;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+}
